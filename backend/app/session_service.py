@@ -98,6 +98,7 @@ class Sessao:
                 versao_contrato=VERSAO_CONTRATO, versao_software=VERSAO_SOFTWARE, ambiente="simulado",
                 intervalo_s=INTERVALO_S, leituras_calibracao=LEITURAS_CALIBRACAO,
                 leituras_roteiro_teste=LEITURAS_ROTEIRO, seed_padrao=SEED_PADRAO,
+                seed_execucao_atual=self._atual.seed if self._atual is not None else None,
                 rng="NumPy Generator(PCG64(SeedSequence([seed, dominio])))",
                 dominios_rng=dict(DOMINIOS_RNG), pesos=dict(PESOS), variaveis=dict(VARIAVEIS),
                 cenarios=PARAMETROS_CENARIOS, avaliacao=PARAMETROS_AVALIACAO, referencia=self._referencia,
@@ -155,8 +156,9 @@ class Sessao:
         with self._lock:
             if self._modo != "executando":
                 return self._estado()
+            agora = self._agora()
             self._modo = "pausada"
-            self._registrar("simulacao_pausada", "Simulação pausada.", self._agora())
+            self._registrar("simulacao_pausada", "Simulação pausada.", agora)
             return self._alterado()
 
     def selecionar(self, cenario: Cenario) -> Estado:
@@ -245,75 +247,76 @@ class Sessao:
             self._registrar("alerta_encerrado", f"Alerta encerrado ({alerta.motivo_encerramento}).",
                             agora, sequencia=sequencia, alerta=alerta)
 
-    def falha_geracao(self) -> None:
-        with self._lock:
-            agora = self._agora()
-            self._modo = "pausada"
-            self._registrar("falha_geracao", "Erro ao gerar leitura. Simulação pausada.", agora)
-            self._registrar("simulacao_pausada", "Simulação pausada após erro de geração.", agora)
-            self._revisao += 1
-
     def avancar(self) -> Leitura | None:
         with self._lock:
             execucao = self._atual
             if self._modo != "executando" or execucao is None:
                 return None
-
             agora = self._agora()
-            sequencia = len(execucao.leituras) + 1
-            medidas, qualidade, motivos = validar(execucao.fonte(execucao.cenario, sequencia))
-            estatisticas = execucao.referencia.estatisticas if execucao.referencia else None
-            resultado = avaliar(medidas, estatisticas)
-            indisponibilidade: Indisponibilidade | None = {
-                "ausente": "DADOS_AUSENTES", "invalida": "DADOS_INVALIDOS",
-            }.get(qualidade)
-            if qualidade == "valida" and estatisticas is None:
-                indisponibilidade = "REFERENCIA_AUSENTE"
-
-            nova_execucao = None
-            if execucao.tipo == "calibracao" and qualidade == "valida":
-                amostra = [*execucao.amostra, medidas]
-                if len(amostra) == LEITURAS_CALIBRACAO:
-                    referencia = Referencia(
-                        id=str(uuid4()), execucao_calibracao_id=execucao.id, criada_em=agora,
-                        seed=execucao.seed, coletadas=len(amostra), estatisticas=calcular_referencia(amostra),
-                    )
-                    nova_execucao = self._preparar("teste", "normal", execucao.seed, referencia, agora)
-                execucao.amostra = amostra
-
-            if qualidade != "valida":
-                execucao.alertas.invalidar()
-                self._registrar("falha_dados", "Leitura com dados inadequados.", agora,
-                                sequencia=sequencia, motivos=motivos)
-            elif estatisticas is not None:
-                assert medidas.pressao_bar is not None
-                for alerta in execucao.alertas.avaliar(
-                    resultado.razoes, medidas.pressao_bar, estatisticas, sequencia, agora
-                ):
-                    self._registrar_alerta(alerta, agora, sequencia)
-
-            recomendacoes = [
-                VARIAVEIS[nome].recomendacao for nome, razao in resultado.razoes.items()
-                if razao > PARAMETROS_AVALIACAO.razao_inicio_perda
-            ]
-            recomendacoes.extend(a.recomendacao for a in execucao.alertas.ativos())
-            leitura = Leitura(
-                **medidas.model_dump(), sessao_id=self._id, execucao_id=execucao.id,
-                referencia_id=execucao.referencia_id, sequencia=sequencia, data_hora=agora,
-                tempo_simulado_s=sequencia, cenario=execucao.cenario, qualidade_dados=qualidade,
-                motivos_qualidade=motivos, pontuacoes=resultado.pontuacoes, ise=resultado.ise,
-                classificacao=resultado.classificacao, motivo_indisponibilidade=indisponibilidade,
-                contribuicoes_perda=resultado.perdas, recomendacoes=tuple(dict.fromkeys(recomendacoes)),
-            )
-            execucao.leituras.append(leitura)
-
-            if nova_execucao is not None:
-                self._referencia = referencia
-                self._referencias.append(referencia)
-                self._registrar("calibracao_concluida", "Referência de dados simulados congelada.",
-                                agora, sequencia=sequencia, referencia_id=referencia.id)
-                self._trocar(nova_execucao, agora)
+            try:
+                return self._gerar_leitura(execucao, agora)
+            except Exception:
                 self._modo = "pausada"
+                self._registrar("falha_geracao", "Erro ao gerar leitura. Simulação pausada.", agora)
+                self._registrar("simulacao_pausada", "Simulação pausada após erro de geração.", agora)
+                self._revisao += 1
+                raise
 
-            self._revisao += 1
-            return leitura
+    def _gerar_leitura(self, execucao: Execucao, agora: datetime) -> Leitura:
+        sequencia = len(execucao.leituras) + 1
+        medidas, qualidade, motivos = validar(execucao.fonte(execucao.cenario, sequencia))
+        estatisticas = execucao.referencia.estatisticas if execucao.referencia else None
+        resultado = avaliar(medidas, estatisticas)
+        indisponibilidade: Indisponibilidade | None = {
+            "ausente": "DADOS_AUSENTES", "invalida": "DADOS_INVALIDOS",
+        }.get(qualidade)
+        if qualidade == "valida" and estatisticas is None:
+            indisponibilidade = "REFERENCIA_AUSENTE"
+
+        nova_execucao = None
+        if execucao.tipo == "calibracao" and qualidade == "valida":
+            amostra = [*execucao.amostra, medidas]
+            if len(amostra) == LEITURAS_CALIBRACAO:
+                referencia = Referencia(
+                    id=str(uuid4()), execucao_calibracao_id=execucao.id, criada_em=agora,
+                    seed=execucao.seed, coletadas=len(amostra), estatisticas=calcular_referencia(amostra),
+                )
+                nova_execucao = self._preparar("teste", "normal", execucao.seed, referencia, agora)
+            execucao.amostra = amostra
+
+        if qualidade != "valida":
+            execucao.alertas.invalidar()
+            self._registrar("falha_dados", "Leitura com dados inadequados.", agora,
+                            sequencia=sequencia, motivos=motivos)
+        elif estatisticas is not None:
+            assert medidas.pressao_bar is not None
+            for alerta in execucao.alertas.avaliar(
+                resultado.razoes, medidas.pressao_bar, estatisticas, sequencia, agora
+            ):
+                self._registrar_alerta(alerta, agora, sequencia)
+
+        recomendacoes = [
+            VARIAVEIS[nome].recomendacao for nome, razao in resultado.razoes.items()
+            if razao > PARAMETROS_AVALIACAO.razao_inicio_perda
+        ]
+        recomendacoes.extend(a.recomendacao for a in execucao.alertas.ativos())
+        leitura = Leitura(
+            **medidas.model_dump(), sessao_id=self._id, execucao_id=execucao.id,
+            referencia_id=execucao.referencia_id, sequencia=sequencia, data_hora=agora,
+            tempo_simulado_s=sequencia, cenario=execucao.cenario, qualidade_dados=qualidade,
+            motivos_qualidade=motivos, pontuacoes=resultado.pontuacoes, ise=resultado.ise,
+            classificacao=resultado.classificacao, motivo_indisponibilidade=indisponibilidade,
+            contribuicoes_perda=resultado.perdas, recomendacoes=tuple(dict.fromkeys(recomendacoes)),
+        )
+        execucao.leituras.append(leitura)
+
+        if nova_execucao is not None:
+            self._referencia = referencia
+            self._referencias.append(referencia)
+            self._registrar("calibracao_concluida", "Referência de dados simulados congelada.",
+                            agora, sequencia=sequencia, referencia_id=referencia.id)
+            self._trocar(nova_execucao, agora)
+            self._modo = "pausada"
+
+        self._revisao += 1
+        return leitura

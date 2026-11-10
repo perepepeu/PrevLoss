@@ -223,6 +223,7 @@ class Configuracao(Modelo):
     leituras_calibracao: Positivo
     leituras_roteiro_teste: Positivo
     seed_padrao: Seed
+    seed_execucao_atual: Seed | None
     rng: str
     dominios_rng: dict[TipoExecucao, NaoNegativo]
     pesos: dict[Variavel, FiniteFloat]

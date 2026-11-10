@@ -4,7 +4,7 @@ import os
 from contextlib import asynccontextmanager, suppress
 from typing import Annotated
 
-from fastapi import FastAPI, Query, Request
+from fastapi import FastAPI, Query
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -20,7 +20,8 @@ from .session_service import Conflito, ExecucaoInexistente, Sessao
 LOG = logging.getLogger(__name__)
 ORIGENS_LOCAIS = "http://localhost:5173,http://127.0.0.1:5173"
 ERROS_ENTRADA = {422: {"model": EnvelopeErro, "description": "Entrada inválida"}}
-ERROS_CONFLITO = {**ERROS_ENTRADA, 409: {"model": EnvelopeErro, "description": "Conflito de estado"}}
+ERROS_POST = {**ERROS_ENTRADA, 400: {"model": EnvelopeErro, "description": "Corpo ilegível"}}
+ERROS_CONFLITO = {**ERROS_POST, 409: {"model": EnvelopeErro, "description": "Conflito de estado"}}
 ERROS_CONSULTA = {**ERROS_ENTRADA, 404: {"model": EnvelopeErro, "description": "Execução inexistente"}}
 
 
@@ -36,7 +37,6 @@ async def gerar_leituras(sessao: Sessao, intervalo_s: float) -> None:
             sessao.avancar()
         except Exception:
             LOG.exception("Erro no trabalhador de simulação")
-            sessao.falha_geracao()
 
 
 def criar_app(sessao: Sessao | None = None, *, gerar: bool = True, intervalo_s: float = INTERVALO_S) -> FastAPI:
@@ -61,6 +61,15 @@ def criar_app(sessao: Sessao | None = None, *, gerar: bool = True, intervalo_s: 
         responses={500: {"model": EnvelopeErro, "description": "Falha inesperada"}},
         redoc_url=None,
     )
+
+    @app.middleware("http")
+    async def tratar_falha_interna(request, call_next):
+        try:
+            return await call_next(request)
+        except Exception:
+            LOG.exception("Erro inesperado na API")
+            return erro(500, "ERRO_INTERNO", "Ocorreu uma falha inesperada no backend.")
+
     origens = os.getenv("PREVLOSS_CORS_ORIGINS", ORIGENS_LOCAIS).split(",")
     app.add_middleware(
         CORSMiddleware,
@@ -91,11 +100,6 @@ def criar_app(sessao: Sessao | None = None, *, gerar: bool = True, intervalo_s: 
             405: ("METODO_INCORRETO", "Use o método HTTP documentado para esta rota."),
         }.get(exc.status_code, ("ERRO_HTTP", "A requisição não pôde ser atendida."))
         return erro(exc.status_code, codigo, mensagem, headers=exc.headers)
-
-    @app.exception_handler(Exception)
-    async def inesperado(_: Request, exc: Exception):
-        LOG.error("Erro inesperado na API", exc_info=exc)
-        return erro(500, "ERRO_INTERNO", "Ocorreu uma falha inesperada no backend.")
 
     @app.get("/api/saude", summary="Verificar o processo")
     def saude() -> Saude:
@@ -133,11 +137,11 @@ def criar_app(sessao: Sessao | None = None, *, gerar: bool = True, intervalo_s: 
     def cenario(comando: ComandoCenario) -> Estado:
         return servico.selecionar(comando.cenario)
 
-    @app.post("/api/iniciar", summary="Iniciar ou retomar", responses=ERROS_ENTRADA)
+    @app.post("/api/iniciar", summary="Iniciar ou retomar", responses=ERROS_POST)
     def iniciar(comando: ComandoVazio) -> Estado:
         return servico.iniciar()
 
-    @app.post("/api/pausar", summary="Pausar sem perder histórico", responses=ERROS_ENTRADA)
+    @app.post("/api/pausar", summary="Pausar sem perder histórico", responses=ERROS_POST)
     def pausar(comando: ComandoVazio) -> Estado:
         return servico.pausar()
 

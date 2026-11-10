@@ -1,4 +1,5 @@
 import time
+from datetime import UTC, datetime
 
 import pytest
 from fastapi.testclient import TestClient
@@ -38,6 +39,7 @@ def test_ponte_roteiro_api_e_openapi(api):
     nova = client.post("/api/reiniciar", json={"seed": 7}).json()["execucao_atual_id"]
     assert nova != troca["execucao_atual_id"]
     assert client.get("/api/execucoes").json()["execucoes"][-1]["seed"] == 7
+    assert client.get("/api/configuracao").json()["seed_execucao_atual"] == 7
     client.post("/api/cenario", json={"cenario": "normal"})
     assert client.post("/api/recalibrar", json={"seed": 17}).json()["calibracao"]["estado"] == "em_andamento"
     contrato = client.get("/openapi.json").json()
@@ -73,6 +75,38 @@ def test_cors_loopback(api):
         "Origin": "http://localhost:5173", "Access-Control-Request-Method": "POST"
     })
     assert response.headers["access-control-allow-origin"] == "http://localhost:5173"
+
+
+def test_erro_500_visivel_ao_frontend_e_sem_mutacao():
+    def fabrica_com_falha(seed, tipo):
+        raise RuntimeError("Falha controlada de criação.")
+
+    sessao = Sessao(fabrica=fabrica_com_falha)
+    with TestClient(criar_app(sessao, gerar=False), raise_server_exceptions=False) as client:
+        inicial = client.get("/api/estado").json()
+        resposta = client.post("/api/recalibrar", json={"seed": 42},
+                               headers={"Origin": "http://localhost:5173"})
+        assert resposta.status_code == 500
+        assert resposta.json()["erro"]["codigo"] == "ERRO_INTERNO"
+        assert resposta.headers.get("access-control-allow-origin") == "http://localhost:5173"
+        assert client.get("/api/estado").json() == inicial
+
+
+def test_falha_do_relogio_na_pausa_preserva_estado_e_eventos():
+    def relogio():
+        if indisponivel:
+            raise RuntimeError("Falha controlada do relógio.")
+        return datetime.now(UTC)
+
+    indisponivel = False
+    sessao = Sessao(relogio=relogio)
+    with TestClient(criar_app(sessao, gerar=False)) as client:
+        inicial = client.post("/api/iniciar", json={}).json()
+        eventos = client.get("/api/eventos").json()
+        indisponivel = True
+        assert client.post("/api/pausar", json={}).status_code == 500
+        assert client.get("/api/estado").json() == inicial
+        assert client.get("/api/eventos").json() == eventos
 
 
 def test_lifespan_gera_sem_get_e_respeita_pausa():

@@ -152,6 +152,28 @@ def test_geracao_concorrente_serializa_sequencias():
     assert [r.sequencia for r in sessao.historico(execucao, 0, 1000).itens] == list(range(1, 101))
 
 
+def test_falha_geracao_atribui_a_execucao_antes_de_liberar_controles():
+    def fabrica(seed, tipo):
+        def fonte(cenario, tempo):
+            if tipo == "teste" and seed == 42:
+                raise RuntimeError("Falha controlada de leitura.")
+            return BASE
+        return fonte
+
+    sessao = Sessao(fabrica=fabrica)
+    calibrar(sessao)
+    anterior = sessao.iniciar().execucao_atual_id
+    with pytest.raises(RuntimeError, match="Falha controlada"):
+        sessao.avancar()
+    assert sessao.estado().estado_simulacao == "pausada"
+    assert sessao.estado().ultima_leitura is None
+    assert any(e.tipo == "falha_geracao" for e in sessao.eventos(anterior).itens)
+    nova = sessao.reiniciar(43).execucao_atual_id
+    assert sessao.iniciar().estado_simulacao == "executando"
+    assert sessao.avancar().execucao_id == nova
+    assert all(e.tipo != "falha_geracao" for e in sessao.eventos(nova).itens)
+
+
 def test_alerta_individual_normal_persistencia_invalidez_e_recuperacao():
     fonte = FonteControlada()
     sessao = Sessao(fabrica=fonte.fabrica)
