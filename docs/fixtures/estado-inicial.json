@@ -1,0 +1,17 @@
+{
+  "versao_contrato": "1",
+  "versao_software": "0.1.0",
+  "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+  "revisao_estado": 0,
+  "estado_simulacao": "parada",
+  "cenario_selecionado": "normal",
+  "calibracao": {
+    "estado": "nao_iniciada",
+    "coletadas": 0,
+    "necessarias": 60,
+    "referencia_id": null
+  },
+  "execucao_atual_id": null,
+  "ultima_leitura": null,
+  "alertas_ativos": []
+}

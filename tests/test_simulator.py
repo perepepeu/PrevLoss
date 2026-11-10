@@ -20,14 +20,19 @@ def test_cenarios_iniciam_desvio_depois_de_dez_segundos(cenario, campo, efeito):
     assert desvio(cenario, 11)[campo] - normal("normal", 11)[campo] == pytest.approx(efeito)
 
 
-@pytest.mark.parametrize(("cenario", "classe", "alerta"), [
-    ("normal", "Normal", None),
-    ("aquecimento", "Atenção", ("DESVIO_INDIVIDUAL", "temperatura")),
-    ("vibracao_elevada", "Atenção", ("DESVIO_INDIVIDUAL", "vibracao")),
-    ("pressao_instavel", "Normal", ("PRESSAO_INSTAVEL", "pressao")),
-    ("multiplos_desvios", "Crítico", ("DESVIO_INDIVIDUAL", "vibracao")),
+@pytest.mark.parametrize(("cenario", "classe", "perda", "atencao", "critico", "aberturas"), [
+    ("normal", "Normal", None, None, None, []),
+    ("aquecimento", "Atenção", 17, 32, None, [("DESVIO_INDIVIDUAL", "temperatura", 22)]),
+    ("vibracao_elevada", "Atenção", 17, 30, None, [("DESVIO_INDIVIDUAL", "vibracao", 19)]),
+    ("pressao_instavel", "Normal", 11, None, None, [
+        ("DESVIO_INDIVIDUAL", "pressao", 13), ("PRESSAO_INSTAVEL", "pressao", 14),
+    ]),
+    ("multiplos_desvios", "Crítico", 17, 22, 30, [
+        ("DESVIO_INDIVIDUAL", "vibracao", 19), ("DESVIO_INDIVIDUAL", "pressao", 19),
+        ("DESVIO_INDIVIDUAL", "temperatura", 22),
+    ]),
 ])
-def test_cenario_em_120_leituras(cenario, classe, alerta):
+def test_cenario_em_120_leituras(cenario, classe, perda, atencao, critico, aberturas):
     sessao = Sessao()
     sessao.iniciar()
     for _ in range(60):
@@ -38,9 +43,8 @@ def test_cenario_em_120_leituras(cenario, classe, alerta):
     assert len(leituras) == 120
     assert leituras[-1].classificacao == classe
     assert all(0 <= leitura.ise <= 100 for leitura in leituras)
-    aberturas = [(e.alerta.codigo, e.alerta.variavel) for e in sessao.eventos(execucao).itens
-                 if e.tipo == "alerta_aberto"]
-    if alerta is None:
-        assert aberturas == []
-    else:
-        assert alerta in aberturas
+    assert next((r.sequencia for r in leituras if r.ise < 100), None) == perda
+    assert next((r.sequencia for r in leituras if r.classificacao == "Atenção"), None) == atencao
+    assert next((r.sequencia for r in leituras if r.classificacao == "Crítico"), None) == critico
+    assert [(e.alerta.codigo, e.alerta.variavel, e.sequencia) for e in sessao.eventos(execucao).itens
+            if e.tipo == "alerta_aberto"] == aberturas

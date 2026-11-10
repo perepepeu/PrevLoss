@@ -1,0 +1,17 @@
+{
+  "versao_contrato": "1",
+  "versao_software": "0.1.0",
+  "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+  "revisao_estado": 185,
+  "estado_simulacao": "pausada",
+  "cenario_selecionado": "aquecimento",
+  "calibracao": {
+    "estado": "concluida",
+    "coletadas": 60,
+    "necessarias": 60,
+    "referencia_id": "b3034125-c235-494e-b21a-781247bf359a"
+  },
+  "execucao_atual_id": "103745da-6157-4486-81f6-16716881d218",
+  "ultima_leitura": null,
+  "alertas_ativos": []
+}

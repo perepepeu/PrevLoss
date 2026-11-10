@@ -1,0 +1,27 @@
+[
+  {
+    "id": "normal",
+    "nome": "Normal",
+    "descricao": "Valores de base com ruído simulado."
+  },
+  {
+    "id": "aquecimento",
+    "nome": "Aquecimento",
+    "descricao": "Elevação gradual de temperatura."
+  },
+  {
+    "id": "vibracao_elevada",
+    "nome": "Vibração elevada",
+    "descricao": "Elevação gradual de vibração."
+  },
+  {
+    "id": "pressao_instavel",
+    "nome": "Pressão instável",
+    "descricao": "Oscilação periódica da pressão."
+  },
+  {
+    "id": "multiplos_desvios",
+    "nome": "Múltiplos desvios",
+    "descricao": "Aquecimento, vibração elevada e redução de pressão combinados."
+  }
+]

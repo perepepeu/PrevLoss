@@ -88,4 +88,26 @@ Uma referência tem `id` e `execucao_calibracao_id` (strings), `criada_em` (data
 
 Um evento tem `id`, `sessao_id`, `execucao_id` (IDs, execução pode ser null), `tipo` (enum no OpenAPI), `data_hora` (data), `sequencia` (inteiro ou null), `referencia_id` (string ou null), `alerta` (Alerta ou null), `motivos_qualidade` (MotivoQualidade[]) e `mensagem` (string). A ordem segue o registro no backend.
 
-Erros têm o formato `{"erro":{"codigo":"REFERENCIA_AUSENTE","mensagem":"Inicie a calibração no cenário Normal.","detalhes":{}}}`. Código e mensagem são strings, detalhes é objeto. 409 representa conflito de estado. 422 representa entrada inválida. 404 identifica execução ou rota inexistente. 405 identifica método inadequado. 500 representa falha interna. O OpenAPI fornece modelos e limites dos parâmetros.
+## Configuração
+
+| Campo | Tipo | Origem, unidade e exemplo |
+| --- | --- | --- |
+| versao_contrato, versao_software | strings | Versões, `"1"` e `"0.1.0"` |
+| ambiente | literal | Contexto, `"simulado"` |
+| intervalo_s | inteiro | Cadência, `1` s |
+| leituras_calibracao, leituras_roteiro_teste | inteiros | Parâmetros de contagem, `60` e `120` |
+| seed_padrao | inteiro | Configuração, `42` |
+| seed_execucao_atual | inteiro ou null | Seed da execução selecionada, `7` após reiniciar com 7 |
+| rng | string | Algoritmo de geração, `NumPy Generator(PCG64(SeedSequence([seed, dominio])))` |
+| dominios_rng | objeto de inteiros | `{"calibracao":0,"teste":1}` |
+| pesos | objeto de números | Um coeficiente por variável, ex. `vibracao: 0.30` |
+| variaveis | objeto de regras | Uma regra por variável |
+| cenarios | objeto de parâmetros | Efeitos programados, detalhados em [CENARIOS.md](CENARIOS.md) |
+| avaliacao | objeto de parâmetros | Limiares, razões, guarda numérica e contagens em [REGRAS.md](REGRAS.md) |
+| referencia | Referência ou null | Referência corrente criada pelo serviço |
+
+Cada regra tem `campo`, `unidade` e `recomendacao` (strings), `direcao` (enum `aumento` ou `bilateral`), `base`, `ruido_dp` e `tolerancia_minima` (números na unidade da variável) e `peso` (coeficiente). Os parâmetros de cenário e avaliação estão tipados no OpenAPI. Os sufixos `_s`, `_c`, `_ms2` e `_bar` indicam segundos, °C, m/s² e bar. As taxas `_por_s` usam a unidade da variável por segundo. Limites de classificação usam pontos de ISE. Persistência e janela são inteiros em leituras. Razões e multiplicadores são adimensionais. Veja todos os valores e nomes em [configuracao.json](fixtures/configuracao.json).
+
+## Erros
+
+O envelope HTTP usa `{"erro":{"codigo":"REFERENCIA_AUSENTE","mensagem":"Inicie a calibração no cenário Normal.","detalhes":{}}}`. Código e mensagem são strings, detalhes é objeto. Um 400 indica corpo ilegível, por exemplo bytes fora de UTF-8. 409 representa conflito de estado. 422 representa entrada inválida. 404 identifica execução ou rota inexistente. 405 identifica método inadequado. 500 representa falha interna. O preflight CORS acontece antes das rotas e pode devolver 400 em texto ao recusar a origem, o método ou os cabeçalhos.

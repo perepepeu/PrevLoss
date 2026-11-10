@@ -1,0 +1,108 @@
+{
+  "execucoes": [
+    {
+      "id": "b90e28ba-0fcf-48cf-b44f-c5ce947a68fe",
+      "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+      "tipo": "calibracao",
+      "cenario": "normal",
+      "seed": 42,
+      "referencia_id": null,
+      "criada_em": "2026-11-10T11:26:46.192230Z",
+      "encerrada_em": "2026-11-10T11:26:46.200432Z",
+      "total_leituras": 60
+    },
+    {
+      "id": "7f0b9c2e-c03c-4021-8178-0247e184f6f1",
+      "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+      "tipo": "teste",
+      "cenario": "normal",
+      "seed": 42,
+      "referencia_id": "b3034125-c235-494e-b21a-781247bf359a",
+      "criada_em": "2026-11-10T11:26:46.200432Z",
+      "encerrada_em": "2026-11-10T11:26:46.206363Z",
+      "total_leituras": 0
+    },
+    {
+      "id": "10d8845c-a4f3-4a19-a2e9-a73ae93389f9",
+      "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+      "tipo": "teste",
+      "cenario": "normal",
+      "seed": 42,
+      "referencia_id": "b3034125-c235-494e-b21a-781247bf359a",
+      "criada_em": "2026-11-10T11:26:46.206363Z",
+      "encerrada_em": "2026-11-10T11:26:46.237698Z",
+      "total_leituras": 120
+    },
+    {
+      "id": "103745da-6157-4486-81f6-16716881d218",
+      "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+      "tipo": "teste",
+      "cenario": "aquecimento",
+      "seed": 42,
+      "referencia_id": "b3034125-c235-494e-b21a-781247bf359a",
+      "criada_em": "2026-11-10T11:26:46.237698Z",
+      "encerrada_em": "2026-11-10T11:26:46.261808Z",
+      "total_leituras": 120
+    },
+    {
+      "id": "d3bf2a52-d25b-4e3d-9261-cd9ae9d1f2fd",
+      "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+      "tipo": "teste",
+      "cenario": "vibracao_elevada",
+      "seed": 42,
+      "referencia_id": "b3034125-c235-494e-b21a-781247bf359a",
+      "criada_em": "2026-11-10T11:26:46.261808Z",
+      "encerrada_em": "2026-11-10T11:26:46.281992Z",
+      "total_leituras": 120
+    },
+    {
+      "id": "67a3b7d6-ce8f-46a9-a891-c1ca5dcf805c",
+      "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+      "tipo": "teste",
+      "cenario": "pressao_instavel",
+      "seed": 42,
+      "referencia_id": "b3034125-c235-494e-b21a-781247bf359a",
+      "criada_em": "2026-11-10T11:26:46.281992Z",
+      "encerrada_em": "2026-11-10T11:26:46.304393Z",
+      "total_leituras": 120
+    },
+    {
+      "id": "808c2cfe-8658-457d-a7af-5b8f7c5c72a5",
+      "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+      "tipo": "teste",
+      "cenario": "multiplos_desvios",
+      "seed": 42,
+      "referencia_id": "b3034125-c235-494e-b21a-781247bf359a",
+      "criada_em": "2026-11-10T11:26:46.304393Z",
+      "encerrada_em": null,
+      "total_leituras": 120
+    }
+  ],
+  "referencias": [
+    {
+      "id": "b3034125-c235-494e-b21a-781247bf359a",
+      "execucao_calibracao_id": "b90e28ba-0fcf-48cf-b44f-c5ce947a68fe",
+      "criada_em": "2026-11-10T11:26:46.200432Z",
+      "seed": 42,
+      "coletadas": 60,
+      "estatisticas": {
+        "temperatura": {
+          "media": 44.94662392351286,
+          "desvio_padrao": 0.2570856505682661
+        },
+        "vibracao": {
+          "media": 1.4995491203200153,
+          "desvio_padrao": 0.02463950221710075
+        },
+        "corrente": {
+          "media": 8.005800801934456,
+          "desvio_padrao": 0.09918218443554336
+        },
+        "pressao": {
+          "media": 2.998407172377009,
+          "desvio_padrao": 0.02698869993078862
+        }
+      }
+    }
+  ]
+}

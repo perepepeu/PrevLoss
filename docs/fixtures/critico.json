@@ -1,0 +1,102 @@
+{
+  "versao_contrato": "1",
+  "versao_software": "0.1.0",
+  "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+  "revisao_estado": 585,
+  "estado_simulacao": "executando",
+  "cenario_selecionado": "multiplos_desvios",
+  "calibracao": {
+    "estado": "concluida",
+    "coletadas": 60,
+    "necessarias": 60,
+    "referencia_id": "b3034125-c235-494e-b21a-781247bf359a"
+  },
+  "execucao_atual_id": "808c2cfe-8658-457d-a7af-5b8f7c5c72a5",
+  "ultima_leitura": {
+    "temperatura_c": 47.98506355527577,
+    "vibracao_rms_ms2": 2.0610729033253548,
+    "corrente_a": 8.151492638377787,
+    "pressao_bar": 2.6014504835603818,
+    "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+    "execucao_id": "808c2cfe-8658-457d-a7af-5b8f7c5c72a5",
+    "referencia_id": "b3034125-c235-494e-b21a-781247bf359a",
+    "sequencia": 30,
+    "data_hora": "2026-11-10T11:26:46.309722Z",
+    "tempo_simulado_s": 30,
+    "cenario": "multiplos_desvios",
+    "qualidade_dados": "valida",
+    "motivos_qualidade": [],
+    "pontuacoes": {
+      "temperatura": 32.052012274569584,
+      "vibracao": 8.55027044325789,
+      "corrente": 100.0,
+      "pressao": 45.120735818527294
+    },
+    "ise": 44.602231365325224,
+    "classificacao": "Crítico",
+    "motivo_indisponibilidade": null,
+    "contribuicoes_perda": {
+      "por_variavel": {
+        "temperatura": 16.986996931357602,
+        "vibracao": 27.434918867022635,
+        "corrente": 0.0,
+        "pressao": 10.975852836294543
+      },
+      "principais": [
+        "vibracao"
+      ]
+    },
+    "recomendacoes": [
+      "Ambiente simulado: verificar ventilação e condições operacionais em uma aplicação real.",
+      "Ambiente simulado: avaliar fixação e alinhamento em uma aplicação real.",
+      "Ambiente simulado: verificar condições hidráulicas em uma aplicação real."
+    ]
+  },
+  "alertas_ativos": [
+    {
+      "id": "a5c05112-2d64-4d6c-bc3a-a64ed48df449",
+      "execucao_id": "808c2cfe-8658-457d-a7af-5b8f7c5c72a5",
+      "codigo": "DESVIO_INDIVIDUAL",
+      "variavel": "temperatura",
+      "estado": "ativo",
+      "iniciado_em": "2026-11-10T11:26:46.308975Z",
+      "sequencia_abertura": 22,
+      "encerrado_em": null,
+      "motivo_encerramento": null,
+      "valor_observado": 1.9291688670039733,
+      "criterio_violado": "r > 1",
+      "mensagem": "Ambiente simulado: desvio de nível em temperatura.",
+      "recomendacao": "Ambiente simulado: verificar ventilação e condições operacionais em uma aplicação real."
+    },
+    {
+      "id": "94c677e9-78fb-447e-8524-c35472a61911",
+      "execucao_id": "808c2cfe-8658-457d-a7af-5b8f7c5c72a5",
+      "codigo": "DESVIO_INDIVIDUAL",
+      "variavel": "vibracao",
+      "estado": "ativo",
+      "iniciado_em": "2026-11-10T11:26:46.308675Z",
+      "sequencia_abertura": 19,
+      "encerrado_em": null,
+      "motivo_encerramento": null,
+      "valor_observado": 1.5844103464879211,
+      "criterio_violado": "r > 1",
+      "mensagem": "Ambiente simulado: desvio de nível em vibração.",
+      "recomendacao": "Ambiente simulado: avaliar fixação e alinhamento em uma aplicação real."
+    },
+    {
+      "id": "7e1a7bfa-c526-4491-bdb5-f874eea436b1",
+      "execucao_id": "808c2cfe-8658-457d-a7af-5b8f7c5c72a5",
+      "codigo": "DESVIO_INDIVIDUAL",
+      "variavel": "pressao",
+      "estado": "ativo",
+      "iniciado_em": "2026-11-10T11:26:46.308675Z",
+      "sequencia_abertura": 19,
+      "encerrado_em": null,
+      "motivo_encerramento": null,
+      "valor_observado": 1.3399541955173286,
+      "criterio_violado": "r > 1",
+      "mensagem": "Ambiente simulado: desvio de nível em pressão.",
+      "recomendacao": "Ambiente simulado: verificar condições hidráulicas em uma aplicação real."
+    }
+  ]
+}

@@ -1,0 +1,119 @@
+{
+  "execucao_id": "808c2cfe-8658-457d-a7af-5b8f7c5c72a5",
+  "itens": [
+    {
+      "id": "1e353f52-2d5d-43f6-991d-d60c2254601c",
+      "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+      "execucao_id": "808c2cfe-8658-457d-a7af-5b8f7c5c72a5",
+      "tipo": "execucao_criada",
+      "data_hora": "2026-11-10T11:26:46.304393Z",
+      "sequencia": null,
+      "referencia_id": "b3034125-c235-494e-b21a-781247bf359a",
+      "alerta": null,
+      "motivos_qualidade": [],
+      "mensagem": "Execução criada."
+    },
+    {
+      "id": "ee79dc85-4e66-47a4-b93c-59e85ebb72f5",
+      "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+      "execucao_id": "808c2cfe-8658-457d-a7af-5b8f7c5c72a5",
+      "tipo": "simulacao_iniciada",
+      "data_hora": "2026-11-10T11:26:46.306539Z",
+      "sequencia": null,
+      "referencia_id": "b3034125-c235-494e-b21a-781247bf359a",
+      "alerta": null,
+      "motivos_qualidade": [],
+      "mensagem": "Simulação iniciada ou retomada."
+    },
+    {
+      "id": "a8cdb49f-5854-451f-8435-87b4fea02e55",
+      "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+      "execucao_id": "808c2cfe-8658-457d-a7af-5b8f7c5c72a5",
+      "tipo": "alerta_aberto",
+      "data_hora": "2026-11-10T11:26:46.308675Z",
+      "sequencia": 19,
+      "referencia_id": "b3034125-c235-494e-b21a-781247bf359a",
+      "alerta": {
+        "id": "94c677e9-78fb-447e-8524-c35472a61911",
+        "execucao_id": "808c2cfe-8658-457d-a7af-5b8f7c5c72a5",
+        "codigo": "DESVIO_INDIVIDUAL",
+        "variavel": "vibracao",
+        "estado": "ativo",
+        "iniciado_em": "2026-11-10T11:26:46.308675Z",
+        "sequencia_abertura": 19,
+        "encerrado_em": null,
+        "motivo_encerramento": null,
+        "valor_observado": 1.5844103464879211,
+        "criterio_violado": "r > 1",
+        "mensagem": "Ambiente simulado: desvio de nível em vibração.",
+        "recomendacao": "Ambiente simulado: avaliar fixação e alinhamento em uma aplicação real."
+      },
+      "motivos_qualidade": [],
+      "mensagem": "Ambiente simulado: desvio de nível em vibração."
+    },
+    {
+      "id": "4884e89f-9e3b-4fdc-abe8-5ea07499f6f7",
+      "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+      "execucao_id": "808c2cfe-8658-457d-a7af-5b8f7c5c72a5",
+      "tipo": "alerta_aberto",
+      "data_hora": "2026-11-10T11:26:46.308675Z",
+      "sequencia": 19,
+      "referencia_id": "b3034125-c235-494e-b21a-781247bf359a",
+      "alerta": {
+        "id": "7e1a7bfa-c526-4491-bdb5-f874eea436b1",
+        "execucao_id": "808c2cfe-8658-457d-a7af-5b8f7c5c72a5",
+        "codigo": "DESVIO_INDIVIDUAL",
+        "variavel": "pressao",
+        "estado": "ativo",
+        "iniciado_em": "2026-11-10T11:26:46.308675Z",
+        "sequencia_abertura": 19,
+        "encerrado_em": null,
+        "motivo_encerramento": null,
+        "valor_observado": 1.3399541955173286,
+        "criterio_violado": "r > 1",
+        "mensagem": "Ambiente simulado: desvio de nível em pressão.",
+        "recomendacao": "Ambiente simulado: verificar condições hidráulicas em uma aplicação real."
+      },
+      "motivos_qualidade": [],
+      "mensagem": "Ambiente simulado: desvio de nível em pressão."
+    },
+    {
+      "id": "332c0b6a-6e42-495f-94e9-b79ba4c1b8ac",
+      "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+      "execucao_id": "808c2cfe-8658-457d-a7af-5b8f7c5c72a5",
+      "tipo": "alerta_aberto",
+      "data_hora": "2026-11-10T11:26:46.308975Z",
+      "sequencia": 22,
+      "referencia_id": "b3034125-c235-494e-b21a-781247bf359a",
+      "alerta": {
+        "id": "a5c05112-2d64-4d6c-bc3a-a64ed48df449",
+        "execucao_id": "808c2cfe-8658-457d-a7af-5b8f7c5c72a5",
+        "codigo": "DESVIO_INDIVIDUAL",
+        "variavel": "temperatura",
+        "estado": "ativo",
+        "iniciado_em": "2026-11-10T11:26:46.308975Z",
+        "sequencia_abertura": 22,
+        "encerrado_em": null,
+        "motivo_encerramento": null,
+        "valor_observado": 1.9291688670039733,
+        "criterio_violado": "r > 1",
+        "mensagem": "Ambiente simulado: desvio de nível em temperatura.",
+        "recomendacao": "Ambiente simulado: verificar ventilação e condições operacionais em uma aplicação real."
+      },
+      "motivos_qualidade": [],
+      "mensagem": "Ambiente simulado: desvio de nível em temperatura."
+    },
+    {
+      "id": "7d9e527c-8cb7-4949-9bb2-c6f0f5d53170",
+      "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+      "execucao_id": "808c2cfe-8658-457d-a7af-5b8f7c5c72a5",
+      "tipo": "simulacao_pausada",
+      "data_hora": "2026-11-10T11:26:46.322180Z",
+      "sequencia": null,
+      "referencia_id": "b3034125-c235-494e-b21a-781247bf359a",
+      "alerta": null,
+      "motivos_qualidade": [],
+      "mensagem": "Simulação pausada."
+    }
+  ]
+}

@@ -1,0 +1,152 @@
+{
+  "versao_software": "0.1.0",
+  "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+  "calibracao_id": "b90e28ba-0fcf-48cf-b44f-c5ce947a68fe",
+  "referencia": {
+    "id": "b3034125-c235-494e-b21a-781247bf359a",
+    "execucao_calibracao_id": "b90e28ba-0fcf-48cf-b44f-c5ce947a68fe",
+    "criada_em": "2026-11-10T11:26:46.200432Z",
+    "seed": 42,
+    "coletadas": 60,
+    "estatisticas": {
+      "temperatura": {
+        "media": 44.94662392351286,
+        "desvio_padrao": 0.2570856505682661
+      },
+      "vibracao": {
+        "media": 1.4995491203200153,
+        "desvio_padrao": 0.02463950221710075
+      },
+      "corrente": {
+        "media": 8.005800801934456,
+        "desvio_padrao": 0.09918218443554336
+      },
+      "pressao": {
+        "media": 2.998407172377009,
+        "desvio_padrao": 0.02698869993078862
+      }
+    }
+  },
+  "resultados": [
+    {
+      "cenario": "normal",
+      "execucao_id": "10d8845c-a4f3-4a19-a2e9-a73ae93389f9",
+      "seed": 42,
+      "leituras": 120,
+      "ise_minimo": 100.0,
+      "ise_final": 100.0,
+      "classificacao_final": "Normal",
+      "primeira_perda_s": null,
+      "primeira_classificacao_s": {
+        "Normal": 1
+      },
+      "aberturas": []
+    },
+    {
+      "cenario": "aquecimento",
+      "execucao_id": "103745da-6157-4486-81f6-16716881d218",
+      "seed": 42,
+      "leituras": 120,
+      "ise_minimo": 75.0,
+      "ise_final": 75.0,
+      "classificacao_final": "Atenção",
+      "primeira_perda_s": 17,
+      "primeira_classificacao_s": {
+        "Normal": 1,
+        "Atenção": 32
+      },
+      "aberturas": [
+        {
+          "codigo": "DESVIO_INDIVIDUAL",
+          "variavel": "temperatura",
+          "tempo_simulado_s": 22,
+          "data_hora": "2026-11-10T11:26:46.243936Z"
+        }
+      ]
+    },
+    {
+      "cenario": "vibracao_elevada",
+      "execucao_id": "d3bf2a52-d25b-4e3d-9261-cd9ae9d1f2fd",
+      "seed": 42,
+      "leituras": 120,
+      "ise_minimo": 70.0,
+      "ise_final": 70.0,
+      "classificacao_final": "Atenção",
+      "primeira_perda_s": 17,
+      "primeira_classificacao_s": {
+        "Normal": 1,
+        "Atenção": 30
+      },
+      "aberturas": [
+        {
+          "codigo": "DESVIO_INDIVIDUAL",
+          "variavel": "vibracao",
+          "tempo_simulado_s": 19,
+          "data_hora": "2026-11-10T11:26:46.266300Z"
+        }
+      ]
+    },
+    {
+      "cenario": "pressao_instavel",
+      "execucao_id": "67a3b7d6-ce8f-46a9-a891-c1ca5dcf805c",
+      "seed": 42,
+      "leituras": 120,
+      "ise_minimo": 80.0,
+      "ise_final": 80.0,
+      "classificacao_final": "Normal",
+      "primeira_perda_s": 11,
+      "primeira_classificacao_s": {
+        "Normal": 1
+      },
+      "aberturas": [
+        {
+          "codigo": "DESVIO_INDIVIDUAL",
+          "variavel": "pressao",
+          "tempo_simulado_s": 13,
+          "data_hora": "2026-11-10T11:26:46.286391Z"
+        },
+        {
+          "codigo": "PRESSAO_INSTAVEL",
+          "variavel": "pressao",
+          "tempo_simulado_s": 14,
+          "data_hora": "2026-11-10T11:26:46.286520Z"
+        }
+      ]
+    },
+    {
+      "cenario": "multiplos_desvios",
+      "execucao_id": "808c2cfe-8658-457d-a7af-5b8f7c5c72a5",
+      "seed": 42,
+      "leituras": 120,
+      "ise_minimo": 25.0,
+      "ise_final": 25.0,
+      "classificacao_final": "Crítico",
+      "primeira_perda_s": 17,
+      "primeira_classificacao_s": {
+        "Normal": 1,
+        "Atenção": 22,
+        "Crítico": 30
+      },
+      "aberturas": [
+        {
+          "codigo": "DESVIO_INDIVIDUAL",
+          "variavel": "vibracao",
+          "tempo_simulado_s": 19,
+          "data_hora": "2026-11-10T11:26:46.308675Z"
+        },
+        {
+          "codigo": "DESVIO_INDIVIDUAL",
+          "variavel": "pressao",
+          "tempo_simulado_s": 19,
+          "data_hora": "2026-11-10T11:26:46.308675Z"
+        },
+        {
+          "codigo": "DESVIO_INDIVIDUAL",
+          "variavel": "temperatura",
+          "tempo_simulado_s": 22,
+          "data_hora": "2026-11-10T11:26:46.308975Z"
+        }
+      ]
+    }
+  ]
+}

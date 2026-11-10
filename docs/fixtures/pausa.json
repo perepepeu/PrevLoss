@@ -1,0 +1,50 @@
+{
+  "versao_contrato": "1",
+  "versao_software": "0.1.0",
+  "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+  "revisao_estado": 184,
+  "estado_simulacao": "pausada",
+  "cenario_selecionado": "normal",
+  "calibracao": {
+    "estado": "concluida",
+    "coletadas": 60,
+    "necessarias": 60,
+    "referencia_id": "b3034125-c235-494e-b21a-781247bf359a"
+  },
+  "execucao_atual_id": "10d8845c-a4f3-4a19-a2e9-a73ae93389f9",
+  "ultima_leitura": {
+    "temperatura_c": 44.962865948192714,
+    "vibracao_rms_ms2": 1.497129633429355,
+    "corrente_a": 8.16482007181332,
+    "pressao_bar": 2.957359578080327,
+    "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+    "execucao_id": "10d8845c-a4f3-4a19-a2e9-a73ae93389f9",
+    "referencia_id": "b3034125-c235-494e-b21a-781247bf359a",
+    "sequencia": 120,
+    "data_hora": "2026-11-10T11:26:46.225912Z",
+    "tempo_simulado_s": 120,
+    "cenario": "normal",
+    "qualidade_dados": "valida",
+    "motivos_qualidade": [],
+    "pontuacoes": {
+      "temperatura": 100.0,
+      "vibracao": 100.0,
+      "corrente": 100.0,
+      "pressao": 100.0
+    },
+    "ise": 100.0,
+    "classificacao": "Normal",
+    "motivo_indisponibilidade": null,
+    "contribuicoes_perda": {
+      "por_variavel": {
+        "temperatura": 0.0,
+        "vibracao": 0.0,
+        "corrente": 0.0,
+        "pressao": 0.0
+      },
+      "principais": []
+    },
+    "recomendacoes": []
+  },
+  "alertas_ativos": []
+}

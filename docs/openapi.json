@@ -1,0 +1,1985 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "prevLoss | Ambiente simulado",
+    "description": "API local de simulação, referência estatística, ISE e alertas de um conjunto motor-bomba.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/api/saude": {
+      "get": {
+        "summary": "Verificar o processo",
+        "operationId": "saude_api_saude_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Saude"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha inesperada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/estado": {
+      "get": {
+        "summary": "Consultar o estado atual",
+        "operationId": "estado_api_estado_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Estado"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha inesperada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cenarios": {
+      "get": {
+        "summary": "Listar os cinco cenários",
+        "operationId": "cenarios_api_cenarios_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "items": {
+                    "$ref": "#/components/schemas/InfoCenario"
+                  },
+                  "type": "array",
+                  "title": "Response Cenarios Api Cenarios Get"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha inesperada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/configuracao": {
+      "get": {
+        "summary": "Consultar parâmetros e referência corrente",
+        "operationId": "configuracao_api_configuracao_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Configuracao"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha inesperada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/execucoes": {
+      "get": {
+        "summary": "Listar execuções e referências da sessão",
+        "operationId": "execucoes_api_execucoes_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Execucoes"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha inesperada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/eventos": {
+      "get": {
+        "summary": "Consultar eventos",
+        "operationId": "eventos_api_eventos_get",
+        "parameters": [
+          {
+            "name": "execucao_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string",
+                  "minLength": 1
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Execucao Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Eventos"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha inesperada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Entrada inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Execução inexistente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/historico": {
+      "get": {
+        "summary": "Paginar leituras por execução",
+        "operationId": "historico_api_historico_get",
+        "parameters": [
+          {
+            "name": "execucao_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "minLength": 1,
+              "title": "Execucao Id"
+            }
+          },
+          {
+            "name": "apos_sequencia",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Apos Sequencia"
+            }
+          },
+          {
+            "name": "limite",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 1000,
+              "minimum": 1,
+              "default": 500,
+              "title": "Limite"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginaHistorico"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha inesperada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Entrada inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Execução inexistente",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/cenario": {
+      "post": {
+        "summary": "Selecionar cenário e deixar pausado",
+        "operationId": "cenario_api_cenario_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComandoCenario"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Estado"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha inesperada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Entrada inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Corpo ilegível",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflito de estado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/iniciar": {
+      "post": {
+        "summary": "Iniciar ou retomar",
+        "operationId": "iniciar_api_iniciar_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComandoVazio"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Estado"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha inesperada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Entrada inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Corpo ilegível",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/pausar": {
+      "post": {
+        "summary": "Pausar sem perder histórico",
+        "operationId": "pausar_api_pausar_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComandoVazio"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Estado"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha inesperada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Entrada inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Corpo ilegível",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/reiniciar": {
+      "post": {
+        "summary": "Criar nova execução de teste pausada",
+        "operationId": "reiniciar_api_reiniciar_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComandoSeed"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Estado"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha inesperada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Entrada inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Corpo ilegível",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflito de estado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/recalibrar": {
+      "post": {
+        "summary": "Iniciar nova coleta de referência Normal",
+        "operationId": "recalibrar_api_recalibrar_post",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ComandoSeed"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Estado"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Falha inesperada",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Entrada inválida",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Corpo ilegível",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "Conflito de estado",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/EnvelopeErro"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Alerta": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "execucao_id": {
+            "type": "string",
+            "title": "Execucao Id"
+          },
+          "codigo": {
+            "type": "string",
+            "enum": [
+              "DESVIO_INDIVIDUAL",
+              "PRESSAO_INSTAVEL"
+            ],
+            "title": "Codigo"
+          },
+          "variavel": {
+            "type": "string",
+            "enum": [
+              "temperatura",
+              "vibracao",
+              "corrente",
+              "pressao"
+            ],
+            "title": "Variavel"
+          },
+          "estado": {
+            "type": "string",
+            "enum": [
+              "ativo",
+              "encerrado"
+            ],
+            "title": "Estado"
+          },
+          "iniciado_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Iniciado Em"
+          },
+          "sequencia_abertura": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Sequencia Abertura"
+          },
+          "encerrado_em": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Encerrado Em"
+          },
+          "motivo_encerramento": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "recuperacao",
+                  "execucao_encerrada"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Motivo Encerramento"
+          },
+          "valor_observado": {
+            "type": "number",
+            "title": "Valor Observado"
+          },
+          "criterio_violado": {
+            "type": "string",
+            "title": "Criterio Violado"
+          },
+          "mensagem": {
+            "type": "string",
+            "title": "Mensagem"
+          },
+          "recomendacao": {
+            "type": "string",
+            "title": "Recomendacao"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "execucao_id",
+          "codigo",
+          "variavel",
+          "estado",
+          "iniciado_em",
+          "sequencia_abertura",
+          "encerrado_em",
+          "motivo_encerramento",
+          "valor_observado",
+          "criterio_violado",
+          "mensagem",
+          "recomendacao"
+        ],
+        "title": "Alerta"
+      },
+      "Calibracao": {
+        "properties": {
+          "estado": {
+            "type": "string",
+            "enum": [
+              "nao_iniciada",
+              "em_andamento",
+              "concluida"
+            ],
+            "title": "Estado"
+          },
+          "coletadas": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Coletadas"
+          },
+          "necessarias": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Necessarias"
+          },
+          "referencia_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Referencia Id"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "estado",
+          "coletadas",
+          "necessarias",
+          "referencia_id"
+        ],
+        "title": "Calibracao"
+      },
+      "ComandoCenario": {
+        "properties": {
+          "cenario": {
+            "type": "string",
+            "enum": [
+              "normal",
+              "aquecimento",
+              "vibracao_elevada",
+              "pressao_instavel",
+              "multiplos_desvios"
+            ],
+            "title": "Cenario"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "cenario"
+        ],
+        "title": "ComandoCenario"
+      },
+      "ComandoSeed": {
+        "properties": {
+          "seed": {
+            "type": "integer",
+            "maximum": 4294967295.0,
+            "minimum": 0.0,
+            "title": "Seed"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "seed"
+        ],
+        "title": "ComandoSeed"
+      },
+      "ComandoVazio": {
+        "properties": {},
+        "additionalProperties": false,
+        "type": "object",
+        "title": "ComandoVazio"
+      },
+      "Configuracao": {
+        "properties": {
+          "versao_contrato": {
+            "type": "string",
+            "title": "Versao Contrato"
+          },
+          "versao_software": {
+            "type": "string",
+            "title": "Versao Software"
+          },
+          "ambiente": {
+            "type": "string",
+            "const": "simulado",
+            "title": "Ambiente"
+          },
+          "intervalo_s": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Intervalo S"
+          },
+          "leituras_calibracao": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Leituras Calibracao"
+          },
+          "leituras_roteiro_teste": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Leituras Roteiro Teste"
+          },
+          "seed_padrao": {
+            "type": "integer",
+            "maximum": 4294967295.0,
+            "minimum": 0.0,
+            "title": "Seed Padrao"
+          },
+          "seed_execucao_atual": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "maximum": 4294967295.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Seed Execucao Atual"
+          },
+          "rng": {
+            "type": "string",
+            "title": "Rng"
+          },
+          "dominios_rng": {
+            "additionalProperties": {
+              "type": "integer",
+              "minimum": 0.0
+            },
+            "propertyNames": {
+              "enum": [
+                "calibracao",
+                "teste"
+              ]
+            },
+            "type": "object",
+            "title": "Dominios Rng"
+          },
+          "pesos": {
+            "additionalProperties": {
+              "type": "number"
+            },
+            "propertyNames": {
+              "enum": [
+                "temperatura",
+                "vibracao",
+                "corrente",
+                "pressao"
+              ]
+            },
+            "type": "object",
+            "title": "Pesos"
+          },
+          "variaveis": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/RegraVariavel"
+            },
+            "propertyNames": {
+              "enum": [
+                "temperatura",
+                "vibracao",
+                "corrente",
+                "pressao"
+              ]
+            },
+            "type": "object",
+            "title": "Variaveis"
+          },
+          "cenarios": {
+            "$ref": "#/components/schemas/ParametrosCenarios"
+          },
+          "avaliacao": {
+            "$ref": "#/components/schemas/ParametrosAvaliacao"
+          },
+          "referencia": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Referencia"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "versao_contrato",
+          "versao_software",
+          "ambiente",
+          "intervalo_s",
+          "leituras_calibracao",
+          "leituras_roteiro_teste",
+          "seed_padrao",
+          "seed_execucao_atual",
+          "rng",
+          "dominios_rng",
+          "pesos",
+          "variaveis",
+          "cenarios",
+          "avaliacao",
+          "referencia"
+        ],
+        "title": "Configuracao"
+      },
+      "EnvelopeErro": {
+        "properties": {
+          "erro": {
+            "$ref": "#/components/schemas/Erro"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "erro"
+        ],
+        "title": "EnvelopeErro"
+      },
+      "Erro": {
+        "properties": {
+          "codigo": {
+            "type": "string",
+            "title": "Codigo"
+          },
+          "mensagem": {
+            "type": "string",
+            "title": "Mensagem"
+          },
+          "detalhes": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Detalhes"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "codigo",
+          "mensagem",
+          "detalhes"
+        ],
+        "title": "Erro"
+      },
+      "Estado": {
+        "properties": {
+          "versao_contrato": {
+            "type": "string",
+            "title": "Versao Contrato"
+          },
+          "versao_software": {
+            "type": "string",
+            "title": "Versao Software"
+          },
+          "sessao_id": {
+            "type": "string",
+            "title": "Sessao Id"
+          },
+          "revisao_estado": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Revisao Estado"
+          },
+          "estado_simulacao": {
+            "type": "string",
+            "enum": [
+              "parada",
+              "executando",
+              "pausada"
+            ],
+            "title": "Estado Simulacao"
+          },
+          "cenario_selecionado": {
+            "type": "string",
+            "enum": [
+              "normal",
+              "aquecimento",
+              "vibracao_elevada",
+              "pressao_instavel",
+              "multiplos_desvios"
+            ],
+            "title": "Cenario Selecionado"
+          },
+          "calibracao": {
+            "$ref": "#/components/schemas/Calibracao"
+          },
+          "execucao_atual_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Execucao Atual Id"
+          },
+          "ultima_leitura": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Leitura"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "alertas_ativos": {
+            "items": {
+              "$ref": "#/components/schemas/Alerta"
+            },
+            "type": "array",
+            "title": "Alertas Ativos"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "versao_contrato",
+          "versao_software",
+          "sessao_id",
+          "revisao_estado",
+          "estado_simulacao",
+          "cenario_selecionado",
+          "calibracao",
+          "execucao_atual_id",
+          "ultima_leitura",
+          "alertas_ativos"
+        ],
+        "title": "Estado"
+      },
+      "Estatistica": {
+        "properties": {
+          "media": {
+            "type": "number",
+            "title": "Media"
+          },
+          "desvio_padrao": {
+            "type": "number",
+            "minimum": 0.0,
+            "title": "Desvio Padrao"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "media",
+          "desvio_padrao"
+        ],
+        "title": "Estatistica"
+      },
+      "Estatisticas": {
+        "properties": {
+          "temperatura": {
+            "$ref": "#/components/schemas/Estatistica"
+          },
+          "vibracao": {
+            "$ref": "#/components/schemas/Estatistica"
+          },
+          "corrente": {
+            "$ref": "#/components/schemas/Estatistica"
+          },
+          "pressao": {
+            "$ref": "#/components/schemas/Estatistica"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "temperatura",
+          "vibracao",
+          "corrente",
+          "pressao"
+        ],
+        "title": "Estatisticas"
+      },
+      "Evento": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "sessao_id": {
+            "type": "string",
+            "title": "Sessao Id"
+          },
+          "execucao_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Execucao Id"
+          },
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "execucao_criada",
+              "execucao_encerrada",
+              "simulacao_iniciada",
+              "simulacao_pausada",
+              "calibracao_iniciada",
+              "calibracao_concluida",
+              "falha_dados",
+              "falha_geracao",
+              "alerta_aberto",
+              "alerta_encerrado"
+            ],
+            "title": "Tipo"
+          },
+          "data_hora": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Data Hora"
+          },
+          "sequencia": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Sequencia"
+          },
+          "referencia_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Referencia Id"
+          },
+          "alerta": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Alerta"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "motivos_qualidade": {
+            "items": {
+              "$ref": "#/components/schemas/MotivoQualidade"
+            },
+            "type": "array",
+            "title": "Motivos Qualidade"
+          },
+          "mensagem": {
+            "type": "string",
+            "title": "Mensagem"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "sessao_id",
+          "execucao_id",
+          "tipo",
+          "data_hora",
+          "sequencia",
+          "referencia_id",
+          "alerta",
+          "motivos_qualidade",
+          "mensagem"
+        ],
+        "title": "Evento"
+      },
+      "Eventos": {
+        "properties": {
+          "execucao_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Execucao Id"
+          },
+          "itens": {
+            "items": {
+              "$ref": "#/components/schemas/Evento"
+            },
+            "type": "array",
+            "title": "Itens"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "execucao_id",
+          "itens"
+        ],
+        "title": "Eventos"
+      },
+      "Execucoes": {
+        "properties": {
+          "execucoes": {
+            "items": {
+              "$ref": "#/components/schemas/InfoExecucao"
+            },
+            "type": "array",
+            "title": "Execucoes"
+          },
+          "referencias": {
+            "items": {
+              "$ref": "#/components/schemas/Referencia"
+            },
+            "type": "array",
+            "title": "Referencias"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "execucoes",
+          "referencias"
+        ],
+        "title": "Execucoes"
+      },
+      "InfoCenario": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "enum": [
+              "normal",
+              "aquecimento",
+              "vibracao_elevada",
+              "pressao_instavel",
+              "multiplos_desvios"
+            ],
+            "title": "Id"
+          },
+          "nome": {
+            "type": "string",
+            "title": "Nome"
+          },
+          "descricao": {
+            "type": "string",
+            "title": "Descricao"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "nome",
+          "descricao"
+        ],
+        "title": "InfoCenario"
+      },
+      "InfoExecucao": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "sessao_id": {
+            "type": "string",
+            "title": "Sessao Id"
+          },
+          "tipo": {
+            "type": "string",
+            "enum": [
+              "calibracao",
+              "teste"
+            ],
+            "title": "Tipo"
+          },
+          "cenario": {
+            "type": "string",
+            "enum": [
+              "normal",
+              "aquecimento",
+              "vibracao_elevada",
+              "pressao_instavel",
+              "multiplos_desvios"
+            ],
+            "title": "Cenario"
+          },
+          "seed": {
+            "type": "integer",
+            "maximum": 4294967295.0,
+            "minimum": 0.0,
+            "title": "Seed"
+          },
+          "referencia_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Referencia Id"
+          },
+          "criada_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Criada Em"
+          },
+          "encerrada_em": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Encerrada Em"
+          },
+          "total_leituras": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Total Leituras"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "sessao_id",
+          "tipo",
+          "cenario",
+          "seed",
+          "referencia_id",
+          "criada_em",
+          "encerrada_em",
+          "total_leituras"
+        ],
+        "title": "InfoExecucao"
+      },
+      "Leitura": {
+        "properties": {
+          "temperatura_c": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temperatura C"
+          },
+          "vibracao_rms_ms2": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vibracao Rms Ms2"
+          },
+          "corrente_a": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Corrente A"
+          },
+          "pressao_bar": {
+            "anyOf": [
+              {
+                "type": "number"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pressao Bar"
+          },
+          "sessao_id": {
+            "type": "string",
+            "title": "Sessao Id"
+          },
+          "execucao_id": {
+            "type": "string",
+            "title": "Execucao Id"
+          },
+          "referencia_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Referencia Id"
+          },
+          "sequencia": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Sequencia"
+          },
+          "data_hora": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Data Hora"
+          },
+          "tempo_simulado_s": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Tempo Simulado S"
+          },
+          "cenario": {
+            "type": "string",
+            "enum": [
+              "normal",
+              "aquecimento",
+              "vibracao_elevada",
+              "pressao_instavel",
+              "multiplos_desvios"
+            ],
+            "title": "Cenario"
+          },
+          "qualidade_dados": {
+            "type": "string",
+            "enum": [
+              "valida",
+              "ausente",
+              "invalida"
+            ],
+            "title": "Qualidade Dados"
+          },
+          "motivos_qualidade": {
+            "items": {
+              "$ref": "#/components/schemas/MotivoQualidade"
+            },
+            "type": "array",
+            "title": "Motivos Qualidade"
+          },
+          "pontuacoes": {
+            "$ref": "#/components/schemas/Pontos"
+          },
+          "ise": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Ise"
+          },
+          "classificacao": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "Normal",
+                  "Atenção",
+                  "Crítico"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Classificacao"
+          },
+          "motivo_indisponibilidade": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "REFERENCIA_AUSENTE",
+                  "DADOS_AUSENTES",
+                  "DADOS_INVALIDOS"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Motivo Indisponibilidade"
+          },
+          "contribuicoes_perda": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Perdas"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "recomendacoes": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Recomendacoes"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "temperatura_c",
+          "vibracao_rms_ms2",
+          "corrente_a",
+          "pressao_bar",
+          "sessao_id",
+          "execucao_id",
+          "referencia_id",
+          "sequencia",
+          "data_hora",
+          "tempo_simulado_s",
+          "cenario",
+          "qualidade_dados",
+          "motivos_qualidade",
+          "pontuacoes",
+          "ise",
+          "classificacao",
+          "motivo_indisponibilidade",
+          "contribuicoes_perda",
+          "recomendacoes"
+        ],
+        "title": "Leitura"
+      },
+      "MotivoQualidade": {
+        "properties": {
+          "variavel": {
+            "type": "string",
+            "enum": [
+              "temperatura",
+              "vibracao",
+              "corrente",
+              "pressao"
+            ],
+            "title": "Variavel"
+          },
+          "codigo": {
+            "type": "string",
+            "enum": [
+              "AUSENTE",
+              "NAO_NUMERICO",
+              "NAO_FINITO",
+              "FORA_DA_FAIXA_NUMERICA"
+            ],
+            "title": "Codigo"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "variavel",
+          "codigo"
+        ],
+        "title": "MotivoQualidade"
+      },
+      "PaginaHistorico": {
+        "properties": {
+          "execucao_id": {
+            "type": "string",
+            "title": "Execucao Id"
+          },
+          "itens": {
+            "items": {
+              "$ref": "#/components/schemas/Leitura"
+            },
+            "type": "array",
+            "title": "Itens"
+          },
+          "proxima_sequencia": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Proxima Sequencia"
+          },
+          "tem_mais": {
+            "type": "boolean",
+            "title": "Tem Mais"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "execucao_id",
+          "itens",
+          "proxima_sequencia",
+          "tem_mais"
+        ],
+        "title": "PaginaHistorico"
+      },
+      "ParametrosAvaliacao": {
+        "properties": {
+          "limite_atencao": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Limite Atencao"
+          },
+          "limite_normal": {
+            "type": "number",
+            "maximum": 100.0,
+            "minimum": 0.0,
+            "title": "Limite Normal"
+          },
+          "multiplicador_dispersao": {
+            "type": "number",
+            "title": "Multiplicador Dispersao"
+          },
+          "razao_inicio_perda": {
+            "type": "number",
+            "title": "Razao Inicio Perda"
+          },
+          "razao_nota_zero": {
+            "type": "number",
+            "title": "Razao Nota Zero"
+          },
+          "persistencia": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Persistencia"
+          },
+          "janela_pressao": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Janela Pressao"
+          },
+          "limiar_minimo_pressao_bar": {
+            "type": "number",
+            "title": "Limiar Minimo Pressao Bar"
+          },
+          "modulo_maximo_leitura": {
+            "type": "number",
+            "title": "Modulo Maximo Leitura"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "limite_atencao",
+          "limite_normal",
+          "multiplicador_dispersao",
+          "razao_inicio_perda",
+          "razao_nota_zero",
+          "persistencia",
+          "janela_pressao",
+          "limiar_minimo_pressao_bar",
+          "modulo_maximo_leitura"
+        ],
+        "title": "ParametrosAvaliacao"
+      },
+      "ParametrosCenarios": {
+        "properties": {
+          "inicio_desvios_s": {
+            "type": "integer",
+            "minimum": 0.0,
+            "title": "Inicio Desvios S"
+          },
+          "aquecimento_por_s": {
+            "type": "number",
+            "title": "Aquecimento Por S"
+          },
+          "aquecimento_max_c": {
+            "type": "number",
+            "title": "Aquecimento Max C"
+          },
+          "vibracao_por_s": {
+            "type": "number",
+            "title": "Vibracao Por S"
+          },
+          "vibracao_max_ms2": {
+            "type": "number",
+            "title": "Vibracao Max Ms2"
+          },
+          "oscilacao_pressao_bar": {
+            "type": "number",
+            "title": "Oscilacao Pressao Bar"
+          },
+          "periodo_pressao_s": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Periodo Pressao S"
+          },
+          "queda_pressao_por_s": {
+            "type": "number",
+            "title": "Queda Pressao Por S"
+          },
+          "queda_pressao_max_bar": {
+            "type": "number",
+            "title": "Queda Pressao Max Bar"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "inicio_desvios_s",
+          "aquecimento_por_s",
+          "aquecimento_max_c",
+          "vibracao_por_s",
+          "vibracao_max_ms2",
+          "oscilacao_pressao_bar",
+          "periodo_pressao_s",
+          "queda_pressao_por_s",
+          "queda_pressao_max_bar"
+        ],
+        "title": "ParametrosCenarios"
+      },
+      "Perdas": {
+        "properties": {
+          "por_variavel": {
+            "$ref": "#/components/schemas/Pontos"
+          },
+          "principais": {
+            "items": {
+              "type": "string",
+              "enum": [
+                "temperatura",
+                "vibracao",
+                "corrente",
+                "pressao"
+              ]
+            },
+            "type": "array",
+            "title": "Principais"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "por_variavel",
+          "principais"
+        ],
+        "title": "Perdas"
+      },
+      "Pontos": {
+        "properties": {
+          "temperatura": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Temperatura"
+          },
+          "vibracao": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vibracao"
+          },
+          "corrente": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Corrente"
+          },
+          "pressao": {
+            "anyOf": [
+              {
+                "type": "number",
+                "maximum": 100.0,
+                "minimum": 0.0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Pressao"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "temperatura",
+          "vibracao",
+          "corrente",
+          "pressao"
+        ],
+        "title": "Pontos"
+      },
+      "Referencia": {
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "execucao_calibracao_id": {
+            "type": "string",
+            "title": "Execucao Calibracao Id"
+          },
+          "criada_em": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Criada Em"
+          },
+          "seed": {
+            "type": "integer",
+            "maximum": 4294967295.0,
+            "minimum": 0.0,
+            "title": "Seed"
+          },
+          "coletadas": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Coletadas"
+          },
+          "estatisticas": {
+            "$ref": "#/components/schemas/Estatisticas"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "id",
+          "execucao_calibracao_id",
+          "criada_em",
+          "seed",
+          "coletadas",
+          "estatisticas"
+        ],
+        "title": "Referencia"
+      },
+      "RegraVariavel": {
+        "properties": {
+          "campo": {
+            "type": "string",
+            "title": "Campo"
+          },
+          "unidade": {
+            "type": "string",
+            "title": "Unidade"
+          },
+          "base": {
+            "type": "number",
+            "title": "Base"
+          },
+          "ruido_dp": {
+            "type": "number",
+            "title": "Ruido Dp"
+          },
+          "tolerancia_minima": {
+            "type": "number",
+            "title": "Tolerancia Minima"
+          },
+          "peso": {
+            "type": "number",
+            "title": "Peso"
+          },
+          "direcao": {
+            "type": "string",
+            "enum": [
+              "aumento",
+              "bilateral"
+            ],
+            "title": "Direcao"
+          },
+          "recomendacao": {
+            "type": "string",
+            "title": "Recomendacao"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "campo",
+          "unidade",
+          "base",
+          "ruido_dp",
+          "tolerancia_minima",
+          "peso",
+          "direcao",
+          "recomendacao"
+        ],
+        "title": "RegraVariavel"
+      },
+      "Saude": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "const": "ok",
+            "title": "Status"
+          },
+          "versao_software": {
+            "type": "string",
+            "title": "Versao Software"
+          }
+        },
+        "additionalProperties": false,
+        "type": "object",
+        "required": [
+          "status",
+          "versao_software"
+        ],
+        "title": "Saude"
+      }
+    }
+  }
+}

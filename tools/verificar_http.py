@@ -134,7 +134,7 @@ def main():
                     processo.wait(timeout=5)
     texto = json.dumps(relatorio, ensure_ascii=False, indent=2) + "\n"
     if args.evidencia:
-        args.evidencia.write_text(texto, encoding="utf-8")
+        args.evidencia.write_text(texto, encoding="utf-8", newline="\n")
     print(texto, end="")
 
 

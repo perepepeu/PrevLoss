@@ -1,0 +1,70 @@
+{
+  "versao_contrato": "1",
+  "versao_software": "0.1.0",
+  "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+  "revisao_estado": 218,
+  "estado_simulacao": "executando",
+  "cenario_selecionado": "aquecimento",
+  "calibracao": {
+    "estado": "concluida",
+    "coletadas": 60,
+    "necessarias": 60,
+    "referencia_id": "b3034125-c235-494e-b21a-781247bf359a"
+  },
+  "execucao_atual_id": "103745da-6157-4486-81f6-16716881d218",
+  "ultima_leitura": {
+    "temperatura_c": 49.01869919839116,
+    "vibracao_rms_ms2": 1.5104428746647283,
+    "corrente_a": 7.871625734735245,
+    "pressao_bar": 2.984000138962462,
+    "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+    "execucao_id": "103745da-6157-4486-81f6-16716881d218",
+    "referencia_id": "b3034125-c235-494e-b21a-781247bf359a",
+    "sequencia": 32,
+    "data_hora": "2026-11-10T11:26:46.244793Z",
+    "tempo_simulado_s": 32,
+    "cenario": "aquecimento",
+    "qualidade_dados": "valida",
+    "motivos_qualidade": [],
+    "pontuacoes": {
+      "temperatura": 0.0,
+      "vibracao": 100.0,
+      "corrente": 100.0,
+      "pressao": 100.0
+    },
+    "ise": 75.0,
+    "classificacao": "Atenção",
+    "motivo_indisponibilidade": null,
+    "contribuicoes_perda": {
+      "por_variavel": {
+        "temperatura": 25.0,
+        "vibracao": 0.0,
+        "corrente": 0.0,
+        "pressao": 0.0
+      },
+      "principais": [
+        "temperatura"
+      ]
+    },
+    "recomendacoes": [
+      "Ambiente simulado: verificar ventilação e condições operacionais em uma aplicação real."
+    ]
+  },
+  "alertas_ativos": [
+    {
+      "id": "d9f1feaa-4d0b-4f86-ad9c-888de63bb4ed",
+      "execucao_id": "103745da-6157-4486-81f6-16716881d218",
+      "codigo": "DESVIO_INDIVIDUAL",
+      "variavel": "temperatura",
+      "estado": "ativo",
+      "iniciado_em": "2026-11-10T11:26:46.243936Z",
+      "sequencia_abertura": 22,
+      "encerrado_em": null,
+      "motivo_encerramento": null,
+      "valor_observado": 1.9291688670039733,
+      "criterio_violado": "r > 1",
+      "mensagem": "Ambiente simulado: desvio de nível em temperatura.",
+      "recomendacao": "Ambiente simulado: verificar ventilação e condições operacionais em uma aplicação real."
+    }
+  ]
+}

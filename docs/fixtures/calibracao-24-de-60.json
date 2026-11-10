@@ -1,0 +1,42 @@
+{
+  "versao_contrato": "1",
+  "versao_software": "0.1.0",
+  "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+  "revisao_estado": 25,
+  "estado_simulacao": "executando",
+  "cenario_selecionado": "normal",
+  "calibracao": {
+    "estado": "em_andamento",
+    "coletadas": 24,
+    "necessarias": 60,
+    "referencia_id": null
+  },
+  "execucao_atual_id": "b90e28ba-0fcf-48cf-b44f-c5ce947a68fe",
+  "ultima_leitura": {
+    "temperatura_c": 44.873010506386755,
+    "vibracao_rms_ms2": 1.497608453672808,
+    "corrente_a": 7.831266556604197,
+    "pressao_bar": 2.9565866258273075,
+    "sessao_id": "91d6abbc-e780-48dc-b70c-a7b72014a7a6",
+    "execucao_id": "b90e28ba-0fcf-48cf-b44f-c5ce947a68fe",
+    "referencia_id": null,
+    "sequencia": 24,
+    "data_hora": "2026-11-10T11:26:46.195340Z",
+    "tempo_simulado_s": 24,
+    "cenario": "normal",
+    "qualidade_dados": "valida",
+    "motivos_qualidade": [],
+    "pontuacoes": {
+      "temperatura": null,
+      "vibracao": null,
+      "corrente": null,
+      "pressao": null
+    },
+    "ise": null,
+    "classificacao": null,
+    "motivo_indisponibilidade": "REFERENCIA_AUSENTE",
+    "contribuicoes_perda": null,
+    "recomendacoes": []
+  },
+  "alertas_ativos": []
+}

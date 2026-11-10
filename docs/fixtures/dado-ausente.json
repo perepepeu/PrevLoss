@@ -1,0 +1,65 @@
+{
+  "versao_contrato": "1",
+  "versao_software": "0.1.0",
+  "sessao_id": "82e876bc-11d7-4ac2-bef9-f3a1cb54351b",
+  "revisao_estado": 66,
+  "estado_simulacao": "executando",
+  "cenario_selecionado": "normal",
+  "calibracao": {
+    "estado": "concluida",
+    "coletadas": 60,
+    "necessarias": 60,
+    "referencia_id": "055633b6-2a6e-4aca-a686-e7584116bf0e"
+  },
+  "execucao_atual_id": "ca75c7e0-bee8-46dd-8169-8ae0f403069e",
+  "ultima_leitura": {
+    "temperatura_c": 45.0,
+    "vibracao_rms_ms2": 1.875,
+    "corrente_a": null,
+    "pressao_bar": 3.0,
+    "sessao_id": "82e876bc-11d7-4ac2-bef9-f3a1cb54351b",
+    "execucao_id": "ca75c7e0-bee8-46dd-8169-8ae0f403069e",
+    "referencia_id": "055633b6-2a6e-4aca-a686-e7584116bf0e",
+    "sequencia": 4,
+    "data_hora": "2026-11-10T11:26:46.354454Z",
+    "tempo_simulado_s": 4,
+    "cenario": "normal",
+    "qualidade_dados": "ausente",
+    "motivos_qualidade": [
+      {
+        "variavel": "corrente",
+        "codigo": "AUSENTE"
+      }
+    ],
+    "pontuacoes": {
+      "temperatura": 100.0,
+      "vibracao": 50.0,
+      "corrente": null,
+      "pressao": 100.0
+    },
+    "ise": null,
+    "classificacao": null,
+    "motivo_indisponibilidade": "DADOS_AUSENTES",
+    "contribuicoes_perda": null,
+    "recomendacoes": [
+      "Ambiente simulado: avaliar fixação e alinhamento em uma aplicação real."
+    ]
+  },
+  "alertas_ativos": [
+    {
+      "id": "9e996ea4-411c-4e36-8f22-45b2cdfc2018",
+      "execucao_id": "ca75c7e0-bee8-46dd-8169-8ae0f403069e",
+      "codigo": "DESVIO_INDIVIDUAL",
+      "variavel": "vibracao",
+      "estado": "ativo",
+      "iniciado_em": "2026-11-10T11:26:46.351302Z",
+      "sequencia_abertura": 3,
+      "encerrado_em": null,
+      "motivo_encerramento": null,
+      "valor_observado": 2.5,
+      "criterio_violado": "r > 1",
+      "mensagem": "Ambiente simulado: desvio de nível em vibração.",
+      "recomendacao": "Ambiente simulado: avaliar fixação e alinhamento em uma aplicação real."
+    }
+  ]
+}

@@ -16,7 +16,8 @@ BASE = dict(temperatura_c=45.0, vibracao_rms_ms2=1.5, corrente_a=8.0, pressao_ba
 def salvar(destino, valor):
     arquivo = ROOT / "docs" / destino
     arquivo.parent.mkdir(parents=True, exist_ok=True)
-    arquivo.write_text(json.dumps(valor, ensure_ascii=False, indent=2, allow_nan=False) + "\n", encoding="utf-8")
+    conteudo = json.dumps(valor, ensure_ascii=False, indent=2, allow_nan=False) + "\n"
+    arquivo.write_text(conteudo, encoding="utf-8", newline="\n")
 
 
 def fixture(nome, valor):
@@ -49,6 +50,8 @@ def gerar_cenarios():
         for cenario in CENARIOS:
             selecionada = corpo(client.post("/api/cenario", json={"cenario": cenario.id}))
             execucao_id = selecionada["execucao_atual_id"]
+            if cenario.id == "aquecimento":
+                fixture("execucao-nova-pausada", selecionada)
             if cenario.id == "normal":
                 fixture("historico-vazio", corpo(client.get("/api/historico", params={"execucao_id": execucao_id})))
             corpo(client.post("/api/iniciar", json={}))

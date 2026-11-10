@@ -1,0 +1,110 @@
+{
+  "versao_contrato": "1",
+  "versao_software": "0.1.0",
+  "ambiente": "simulado",
+  "intervalo_s": 1,
+  "leituras_calibracao": 60,
+  "leituras_roteiro_teste": 120,
+  "seed_padrao": 42,
+  "seed_execucao_atual": 42,
+  "rng": "NumPy Generator(PCG64(SeedSequence([seed, dominio])))",
+  "dominios_rng": {
+    "calibracao": 0,
+    "teste": 1
+  },
+  "pesos": {
+    "temperatura": 0.25,
+    "vibracao": 0.3,
+    "corrente": 0.25,
+    "pressao": 0.2
+  },
+  "variaveis": {
+    "temperatura": {
+      "campo": "temperatura_c",
+      "unidade": "°C",
+      "base": 45.0,
+      "ruido_dp": 0.3,
+      "tolerancia_minima": 1.0,
+      "peso": 0.25,
+      "direcao": "aumento",
+      "recomendacao": "Ambiente simulado: verificar ventilação e condições operacionais em uma aplicação real."
+    },
+    "vibracao": {
+      "campo": "vibracao_rms_ms2",
+      "unidade": "m/s² RMS",
+      "base": 1.5,
+      "ruido_dp": 0.03,
+      "tolerancia_minima": 0.15,
+      "peso": 0.3,
+      "direcao": "aumento",
+      "recomendacao": "Ambiente simulado: avaliar fixação e alinhamento em uma aplicação real."
+    },
+    "corrente": {
+      "campo": "corrente_a",
+      "unidade": "A",
+      "base": 8.0,
+      "ruido_dp": 0.1,
+      "tolerancia_minima": 0.4,
+      "peso": 0.25,
+      "direcao": "bilateral",
+      "recomendacao": "Ambiente simulado: verificar carga e alimentação em uma aplicação real."
+    },
+    "pressao": {
+      "campo": "pressao_bar",
+      "unidade": "bar",
+      "base": 3.0,
+      "ruido_dp": 0.03,
+      "tolerancia_minima": 0.15,
+      "peso": 0.2,
+      "direcao": "bilateral",
+      "recomendacao": "Ambiente simulado: verificar condições hidráulicas em uma aplicação real."
+    }
+  },
+  "cenarios": {
+    "inicio_desvios_s": 10,
+    "aquecimento_por_s": 0.15,
+    "aquecimento_max_c": 12.0,
+    "vibracao_por_s": 0.025,
+    "vibracao_max_ms2": 2.0,
+    "oscilacao_pressao_bar": 0.6,
+    "periodo_pressao_s": 8,
+    "queda_pressao_por_s": 0.02,
+    "queda_pressao_max_bar": 1.2
+  },
+  "avaliacao": {
+    "limite_atencao": 50.0,
+    "limite_normal": 80.0,
+    "multiplicador_dispersao": 3.0,
+    "razao_inicio_perda": 1.0,
+    "razao_nota_zero": 4.0,
+    "persistencia": 3,
+    "janela_pressao": 10,
+    "limiar_minimo_pressao_bar": 0.2,
+    "modulo_maximo_leitura": 1000000.0
+  },
+  "referencia": {
+    "id": "b3034125-c235-494e-b21a-781247bf359a",
+    "execucao_calibracao_id": "b90e28ba-0fcf-48cf-b44f-c5ce947a68fe",
+    "criada_em": "2026-11-10T11:26:46.200432Z",
+    "seed": 42,
+    "coletadas": 60,
+    "estatisticas": {
+      "temperatura": {
+        "media": 44.94662392351286,
+        "desvio_padrao": 0.2570856505682661
+      },
+      "vibracao": {
+        "media": 1.4995491203200153,
+        "desvio_padrao": 0.02463950221710075
+      },
+      "corrente": {
+        "media": 8.005800801934456,
+        "desvio_padrao": 0.09918218443554336
+      },
+      "pressao": {
+        "media": 2.998407172377009,
+        "desvio_padrao": 0.02698869993078862
+      }
+    }
+  }
+}

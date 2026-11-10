@@ -1,0 +1,11 @@
+10/11/2026 | Windows 11 x64 | Python 3.13.15
+Backend 0.1.0 | código 83faeedd51dd104afb7fa6ad84133046fd7d11a0
+
+> uv run --locked pytest -q
+........................................................................ [ 88%]
+.........                                                                [100%]
+81 passed in 1.75s
+
+> uv run --locked pytest -q tests/test_scoring.py -k limites_classificacao
+........                                                                 [100%]
+8 passed, 19 deselected in 0.22s
