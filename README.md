@@ -20,6 +20,7 @@ Abra [a documentação da API](http://127.0.0.1:8000/docs) ou consulte `GET /api
 
 ## Integração e testes
 
+- [Relatório da entrega de Emerson e estado atual](docs/ENTREGA_EMERSON.md)
 - [Instalação, CORS e importação da branch](docs/INSTALACAO.md)
 - [Roteiro HTTP, respostas e integração para Pedro](docs/CONTRATO.md)
 - [Contrato v1](docs/contrato-v1.md), [OpenAPI](docs/openapi.json), [tipos TypeScript](docs/contrato-v1.d.ts) e [fixtures](docs/fixtures/)

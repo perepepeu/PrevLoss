@@ -37,7 +37,14 @@ Se o Uvicorn exibir erro de bind, como `[WinError 10048]` ou `address already in
 
 ## Git
 
-A entrega foi preparada na branch local `emerson/backend-v1`, baseada na `main` do repositório do grupo (commit inicial `52adfe2`). O ZIP executa por si só. Para importar a branch usando o bundle, execute na raiz de um clone do repositório do grupo, ajustando o caminho do arquivo:
+A entrega está na branch `emerson/backend-v1`, baseada no commit inicial `52adfe2` da `main`. Com acesso ao repositório do grupo, use:
+
+```powershell
+git clone --branch emerson/backend-v1 https://github.com/perepepeu/PrevLoss.git
+cd PrevLoss
+```
+
+O ZIP executa por si só. Para importar a branch usando o bundle, execute na raiz de um clone do repositório do grupo, ajustando o caminho do arquivo:
 
 ```powershell
 git fetch "C:/caminho/prevloss-backend-v1.bundle" "refs/heads/emerson/backend-v1:refs/heads/emerson/backend-v1"
