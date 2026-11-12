@@ -17,7 +17,7 @@ Os itens representam **possíveis problemas**, não falhas já encontradas. “C
 | 09 — Mistura entre cenários | `test_historico_paginado_e_execucoes_separadas`. | Proteção de IDs, cancelamento por geração, caches por execução e rejeição de resposta de outra sessão. | Coberta tecnicamente; consultar duas execuções na validação real. |
 | 10 — Dados ausentes tratados como Normal | Testes de ausência, invalidade e não redistribuição de pesos. | Fixtures `dado-ausente`/`dado-invalido`, ISE indisponível, razões por variável e gráficos com lacunas. | Coberta em testes controlados. Caíque reproduz por testes/fixtures identificadas; não há rota pública de injeção nem modificação da fórmula. |
 | 11 — Histórico incorreto | Paginação, preservação de execuções e referências. | Teste com 1001 leituras, deduplicação e consulta de execução anterior no navegador; data/hora e tabela de 50 linhas. | Coberta tecnicamente; Caíque registra as execuções separadas na mesma sessão. |
-| 12 — Perda após reinicialização | Sessão em memória; reinício cria outra sessão. | Reload preserva execução; reinício do backend gera aviso, limpa caches e mostra histórico vazio. | Comportamento previsto no escopo: persistência entre processos não é requisito. Caíque distingue reload do frontend de reinício do backend. |
+| 12 — Perda após reinicialização | Snapshot local atômico em `.prevloss/session.json`; reinício restaura sessão e histórico, pausando a operação. | Reload preserva execução; reinício do backend preserva leituras, eventos, referência e sequência. | Teste de retomada automatizado; validar também em demonstração no celular. |
 
 ## Método para fronteiras e dados ausentes
 

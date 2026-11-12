@@ -1,6 +1,7 @@
 import asyncio
 import logging
 import os
+from pathlib import Path
 from contextlib import asynccontextmanager, suppress
 from typing import Annotated
 
@@ -44,7 +45,7 @@ async def gerar_leituras(sessao: Sessao, intervalo_s: float) -> None:
 
 
 def criar_app(sessao: Sessao | None = None, *, gerar: bool = True, intervalo_s: float = INTERVALO_S) -> FastAPI:
-    servico = sessao if sessao is not None else Sessao()
+    servico = sessao if sessao is not None else Sessao(snapshot_path=Path(os.getenv("PREVLOSS_STATE_FILE", ".prevloss/session.json")))
 
     @asynccontextmanager
     async def lifespan(_):

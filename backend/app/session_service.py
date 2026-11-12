@@ -1,6 +1,9 @@
+import json
+import os
 from collections.abc import Callable, Mapping
 from dataclasses import dataclass, field
 from datetime import UTC, datetime
+from pathlib import Path
 from threading import RLock
 from uuid import uuid4
 
@@ -54,7 +57,8 @@ class Execucao:
 class Sessao:
     """Um escritor por vez. Leituras, eventos e referências são registros imutáveis."""
 
-    def __init__(self, fabrica: Fabrica = Simulador, relogio: Callable[[], datetime] | None = None):
+    def __init__(self, fabrica: Fabrica = Simulador, relogio: Callable[[], datetime] | None = None,
+                 snapshot_path: Path | None = None):
         self._lock = RLock()
         self._fabrica = fabrica
         self._agora = relogio if relogio is not None else lambda: datetime.now(UTC)
@@ -67,6 +71,84 @@ class Sessao:
         self._execucoes: dict[str, Execucao] = {}
         self._referencias: list[Referencia] = []
         self._eventos: list[Evento] = []
+        self._snapshot_path = snapshot_path
+        if snapshot_path is not None and snapshot_path.exists():
+            self._restaurar(json.loads(snapshot_path.read_text(encoding="utf-8")))
+
+    def _restaurar(self, data: dict) -> None:
+        if data.get("versao") != 1:
+            raise ValueError("Versão do arquivo de sessão incompatível.")
+        self._id = data["id"]
+        self._revisao = data["revisao"]
+        self._modo = "pausada" if data["modo"] == "executando" else data["modo"]
+        self._cenario = data["cenario"]
+        self._referencias = [Referencia.model_validate(item) for item in data["referencias"]]
+        referencias = {item.id: item for item in self._referencias}
+        self._referencia = referencias.get(data["referencia_id"])
+        self._eventos = [Evento.model_validate(item) for item in data["eventos"]]
+        for item in data["execucoes"]:
+            fonte = self._fabrica(item["seed"], item["tipo"])
+            if not isinstance(fonte, Simulador):
+                raise ValueError("A restauração exige o simulador padrão.")
+            fonte.rng.bit_generator.state = item["rng_state"]
+            alertas = MotorAlertas(item["id"])
+            for nome, state in item["alertas"]["niveis"].items():
+                alertas.niveis[nome].consecutivas = state["consecutivas"]
+                alertas.niveis[nome].alerta = Alerta.model_validate(state["alerta"]) if state["alerta"] else None
+            state = item["alertas"]["oscilacao"]
+            alertas.oscilacao.consecutivas = state["consecutivas"]
+            alertas.oscilacao.alerta = Alerta.model_validate(state["alerta"]) if state["alerta"] else None
+            alertas.janela.extend(item["alertas"]["janela"])
+            execucao = Execucao(
+                id=item["id"], tipo=item["tipo"], cenario=item["cenario"], seed=item["seed"],
+                referencia=referencias.get(item["referencia_id"]),
+                criada_em=datetime.fromisoformat(item["criada_em"]), fonte=fonte, alertas=alertas,
+                encerrada_em=datetime.fromisoformat(item["encerrada_em"]) if item["encerrada_em"] else None,
+                leituras=[Leitura.model_validate(value) for value in item["leituras"]],
+                amostra=[Medidas.model_validate(value) for value in item["amostra"]],
+            )
+            self._execucoes[execucao.id] = execucao
+        self._atual = self._execucoes.get(data["atual_id"])
+
+    def _salvar(self) -> None:
+        if self._snapshot_path is None:
+            return
+        def dump(value):
+            return value.model_dump(mode="json") if value is not None else None
+        def persistence(value):
+            return {"consecutivas": value.consecutivas, "alerta": dump(value.alerta)}
+        execucoes = []
+        for item in self._execucoes.values():
+            if not isinstance(item.fonte, Simulador):
+                raise ValueError("A persistência exige o simulador padrão.")
+            execucoes.append({
+                "id": item.id, "tipo": item.tipo, "cenario": item.cenario, "seed": item.seed,
+                "referencia_id": item.referencia_id, "criada_em": item.criada_em.isoformat(),
+                "encerrada_em": item.encerrada_em.isoformat() if item.encerrada_em else None,
+                "leituras": [dump(value) for value in item.leituras],
+                "amostra": [dump(value) for value in item.amostra],
+                "rng_state": item.fonte.rng.bit_generator.state,
+                "alertas": {
+                    "niveis": {nome: persistence(value) for nome, value in item.alertas.niveis.items()},
+                    "oscilacao": persistence(item.alertas.oscilacao),
+                    "janela": list(item.alertas.janela),
+                },
+            })
+        data = {
+            "versao": 1, "id": self._id, "revisao": self._revisao, "modo": self._modo,
+            "cenario": self._cenario, "referencia_id": self._referencia.id if self._referencia else None,
+            "atual_id": self._atual.id if self._atual else None,
+            "referencias": [dump(value) for value in self._referencias],
+            "eventos": [dump(value) for value in self._eventos], "execucoes": execucoes,
+        }
+        path = self._snapshot_path
+        path.parent.mkdir(parents=True, exist_ok=True)
+        temporary = path.with_suffix(path.suffix + ".tmp")
+        with temporary.open("w", encoding="utf-8") as output:
+            json.dump(data, output, ensure_ascii=False, allow_nan=False)
+            output.flush()
+            os.fsync(output.fileno())
+        os.replace(temporary, path)
 
     def estado(self) -> Estado:
         with self._lock:
@@ -225,6 +307,7 @@ class Sessao:
 
     def _alterado(self) -> Estado:
         self._revisao += 1
+        self._salvar()
         return self._estado()
 
     def _registrar(
@@ -260,6 +343,7 @@ class Sessao:
                 self._registrar("falha_geracao", "Erro ao gerar leitura. Simulação pausada.", agora)
                 self._registrar("simulacao_pausada", "Simulação pausada após erro de geração.", agora)
                 self._revisao += 1
+                self._salvar()
                 raise
 
     def _gerar_leitura(self, execucao: Execucao, agora: datetime) -> Leitura:
@@ -319,4 +403,5 @@ class Sessao:
             self._modo = "pausada"
 
         self._revisao += 1
+        self._salvar()
         return leitura

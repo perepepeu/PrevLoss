@@ -2,6 +2,8 @@
 
 Protótipo local de monitoramento simulado de uma bomba. A API gera quatro medidas em cinco cenários, calcula referência estatística e ISE e mantém alertas e histórico da sessão. O dashboard React em `frontend/` permite operar a simulação, acompanhar gráficos e consultar execuções anteriores.
 
+O backend salva a sessão em `.prevloss/session.json`. Ao reiniciar, o histórico reaparece e a simulação fica pausada até você retomá-la.
+
 ## Dashboard de Pedro
 
 Siga [o guia de instalação, operação e apresentação](docs/DASHBOARD.md). A interface usa `http://127.0.0.1:5173` tanto em desenvolvimento quanto na apresentação, e a API usa `http://127.0.0.1:8000`.

@@ -46,7 +46,7 @@ Tanto `dev` quanto `preview` usam `--host 127.0.0.1 --port 5173 --strictPort`. S
 
 Para usar em um celular conectado ao mesmo Wi-Fi, siga [MOBILE_UX.md](MOBILE_UX.md) e execute `npm run mobile`. Ele expõe o frontend à rede local e encaminha `/api` para o backend local; a porta 8000 permanece no próprio computador. Use esse modo apenas em uma rede privada confiável.
 
-Não usar `--reload` ou múltiplos workers no backend durante a apresentação. Parar esse processo apaga sua sessão em memória. Para encerrar normalmente, use Ctrl+C nos terminais correspondentes.
+Não usar `--reload` ou múltiplos workers no backend durante a apresentação. A sessão fica em `.prevloss/session.json` e volta pausada após reiniciar o processo. Para encerrar normalmente, use Ctrl+C nos terminais correspondentes.
 
 ## Operar
 
@@ -73,7 +73,7 @@ Os gráficos exibem os últimos 120 pontos, mas o histórico completo da execuç
 | Contrato incompatível | Conferir backend/contrato 1 e a causa mostrada. Corrigir o servidor e clicar **Tentar sincronizar novamente**, ou aguardar a consulta automática. Só um estado compatível libera a operação. Não é necessário recarregar. |
 | Comando sem confirmação | O cliente consulta o estado e não repete o POST automaticamente. Conferir o resultado antes de tentar de novo. |
 | Falha de geração | O evento é exibido separadamente da pausa voluntária. Registrar erro, versão e execução para Emerson. |
-| Nova sessão | O aviso de reinício explica a perda prevista dos registros em memória. A interface descarta caches anteriores. |
+| Nova sessão | Se o arquivo de sessão for removido ou outro caminho for usado, a interface avisa e descarta os dados anteriores do navegador. |
 | Porta 5173 ocupada | Fechar o servidor de frontend anterior que você iniciou. Não encerrar processos desconhecidos. |
 | Porta 8000 ocupada | Identificar o processo ou configurar uma porta alternativa na API e no frontend. |
 | CORS | As origens padrão incluem `127.0.0.1:5173` e `localhost:5173`. Se mudar a origem, ajustar `PREVLOSS_CORS_ORIGINS` e carregar o arquivo do backend com `--env-file .env`. |

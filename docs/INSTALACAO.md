@@ -33,7 +33,7 @@ A primeira sincronização baixa dependências. A API e a simulação funcionam 
 
 Para mudar as origens, copie `.env.example` para `.env`, edite e acrescente `--env-file .env` ao comando do Uvicorn. Também pode definir a variável de ambiente diretamente no terminal. O arquivo de exemplo não contém segredos.
 
-Se o Uvicorn exibir erro de bind, como `[WinError 10048]` ou `address already in use`, pare o servidor que usa a porta ou altere `--port` para 8001 e ajuste a URL usada pelo cliente. Use `Ctrl+C` para parar o servidor. Cada processo mantém uma sessão independente em memória. Execute com um worker e sem `--reload` durante a demonstração.
+Se o Uvicorn exibir erro de bind, como `[WinError 10048]` ou `address already in use`, pare o servidor que usa a porta ou altere `--port` para 8001 e ajuste a URL usada pelo cliente. Use `Ctrl+C` para parar o servidor. A sessão é salva em `.prevloss/session.json` e restaurada pausada. Execute com um worker e sem `--reload` durante a demonstração.
 
 ## Git
 
