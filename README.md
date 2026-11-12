@@ -12,6 +12,8 @@ Depois de preparar as dependências, mantenha o backend aberto pelo comando abai
 
 Para testar no celular na mesma rede, execute `npm run mobile` na pasta `frontend`. O comando inicia os serviços, mostra o link e salva o QR Code em `frontend/dist/acesso-mobile.svg`. Veja [o guia mobile](docs/MOBILE_UX.md).
 
+Para acesso permanente fora da rede local, veja [a hospedagem no Render](docs/HOSPEDAGEM.md). Ela usa HTTPS, senha e disco persistente.
+
 - [Matriz das 12 verificações originais de Caíque](docs/MATRIZ_CAIQUE.md)
 - [Revisão original disponibilizada localmente](docs/referencias/ALTERACAO.pdf)
 - [Entrega, verificações e evidências do frontend](docs/ENTREGA_PEDRO.md)

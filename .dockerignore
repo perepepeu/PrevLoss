@@ -1,0 +1,10 @@
+.git
+.venv
+.prevloss
+**/node_modules
+**/dist
+**/.env
+**/.env.*
+frontend/test-results
+frontend/playwright-report
+docs/evidencias

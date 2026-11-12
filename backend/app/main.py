@@ -1,4 +1,7 @@
 import asyncio
+import base64
+import binascii
+import hmac
 import logging
 import os
 from pathlib import Path
@@ -9,6 +12,8 @@ from fastapi import FastAPI, Query
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
+from fastapi.responses import Response
+from fastapi.staticfiles import StaticFiles
 from starlette.exceptions import HTTPException as StarletteHTTPException
 
 from .config import CENARIOS, INTERVALO_S, VERSAO_SOFTWARE
@@ -46,6 +51,10 @@ async def gerar_leituras(sessao: Sessao, intervalo_s: float) -> None:
 
 def criar_app(sessao: Sessao | None = None, *, gerar: bool = True, intervalo_s: float = INTERVALO_S) -> FastAPI:
     servico = sessao if sessao is not None else Sessao(snapshot_path=Path(os.getenv("PREVLOSS_STATE_FILE", ".prevloss/session.json")))
+    exigir_senha = os.getenv("PREVLOSS_REQUIRE_AUTH") == "1"
+    senha = os.getenv("PREVLOSS_ACCESS_PASSWORD", "")
+    if exigir_senha and not senha:
+        raise ValueError("PREVLOSS_ACCESS_PASSWORD é obrigatória para acesso público.")
 
     @asynccontextmanager
     async def lifespan(_):
@@ -66,6 +75,22 @@ def criar_app(sessao: Sessao | None = None, *, gerar: bool = True, intervalo_s: 
         responses={500: {"model": EnvelopeErro, "description": "Falha inesperada"}},
         redoc_url=None,
     )
+
+    @app.middleware("http")
+    async def proteger_acesso(request, call_next):
+        if exigir_senha and request.url.path != "/api/saude":
+            autorizado = False
+            cabecalho = request.headers.get("authorization", "")
+            if cabecalho.startswith("Basic "):
+                try:
+                    credenciais = base64.b64decode(cabecalho[6:], validate=True).decode("utf-8")
+                    usuario, fornecida = credenciais.split(":", 1)
+                    autorizado = hmac.compare_digest(usuario, "prevloss") and hmac.compare_digest(fornecida, senha)
+                except (binascii.Error, ValueError, UnicodeDecodeError):
+                    pass
+            if not autorizado:
+                return Response(status_code=401, headers={"WWW-Authenticate": 'Basic realm="prevLoss"'})
+        return await call_next(request)
 
     @app.middleware("http")
     async def tratar_falha_interna(request, call_next):
@@ -158,6 +183,10 @@ def criar_app(sessao: Sessao | None = None, *, gerar: bool = True, intervalo_s: 
     @app.post("/api/recalibrar", summary="Iniciar nova coleta de referência Normal", responses=ERROS_CONFLITO)
     def recalibrar(comando: ComandoSeed) -> Estado:
         return servico.recalibrar(comando.seed)
+
+    static_dir = os.getenv("PREVLOSS_STATIC_DIR")
+    if static_dir:
+        app.mount("/", StaticFiles(directory=static_dir, html=True), name="frontend")
 
     return app
 

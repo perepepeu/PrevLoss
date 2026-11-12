@@ -1,0 +1,14 @@
+services:
+  - type: web
+    name: prevloss
+    runtime: docker
+    plan: 0.5c-512mb
+    numInstances: 1
+    healthCheckPath: /api/saude
+    envVars:
+      - key: PREVLOSS_ACCESS_PASSWORD
+        sync: false
+    disk:
+      name: prevloss-data
+      mountPath: /var/data
+      sizeGB: 1
