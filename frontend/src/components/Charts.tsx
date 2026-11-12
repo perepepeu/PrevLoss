@@ -1,3 +1,4 @@
+import { useState } from 'react';
 import { CartesianGrid, Line, LineChart, ResponsiveContainer, Tooltip, XAxis, YAxis } from 'recharts';
 import type { Leitura } from '../types/api';
 import { fmt, variables } from './format';
@@ -5,9 +6,10 @@ import { fmt, variables } from './format';
 export function SensorCharts({ readings }: { readings: Leitura[] }) {
   const data = readings.slice(-120);
   const series = [...variables.map(v => ({ field: v.field, name: v.name, unit: v.unit, color: v.color })), { field: 'ise', name: 'Índice de saúde', unit: 'ISE', color: '#1565c0' }];
+  const [selected, setSelected] = useState(series[0].field);
   return <section className="panel charts-panel" aria-labelledby="charts-title">
     <div className="section-heading"><div><h2 id="charts-title">Evolução das leituras</h2><p>Últimos 120 pontos desta execução · tempo simulado em segundos</p></div><span className="quiet">{data.length} pontos</span></div>
-    {!data.length ? <div className="empty-state"><span aria-hidden="true">∿</span><h3>O comportamento aparece aqui</h3><p>Inicie uma execução para acompanhar a evolução das variáveis.</p></div> : <div className="charts-grid">{series.map(s => <figure key={s.field} className={s.field === 'ise' ? 'ise-chart' : ''}>
+    {!data.length ? <div className="empty-state"><span aria-hidden="true">∿</span><h3>O comportamento aparece aqui</h3><p>Inicie uma execução para acompanhar a evolução das variáveis.</p></div> : <><div className="chart-selector" aria-label="Escolher gráfico">{series.map(s => <button key={s.field} aria-pressed={selected === s.field} onClick={() => setSelected(s.field)}>{s.field === 'corrente_a' ? 'Corrente' : s.field === 'vibracao_rms_ms2' ? 'Vibração' : s.name}</button>)}</div><div className="charts-grid">{series.map(s => <figure key={s.field} className={`${s.field === 'ise' ? 'ise-chart ' : ''}${selected === s.field ? 'mobile-chart-visible' : ''}`}>
       <figcaption><strong>{s.name}</strong><span>{s.unit}</span></figcaption>
       <div className="chart" role="img" aria-label={`Gráfico de ${s.name}, ${data.length} leituras; valores disponíveis na tabela do histórico.`}>
         <ResponsiveContainer width="100%" height={180} minWidth={1}>
@@ -20,6 +22,6 @@ export function SensorCharts({ readings }: { readings: Leitura[] }) {
           </LineChart>
         </ResponsiveContainer>
       </div>
-    </figure>)}</div>}
+    </figure>)}</div></>}
   </section>;
 }

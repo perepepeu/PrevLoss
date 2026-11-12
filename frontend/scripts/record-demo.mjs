@@ -17,7 +17,7 @@ while (true) {
 }
 const browser = await chromium.launch({ channel: 'chrome', proxy: { server: 'http://127.0.0.1:9', bypass: '127.0.0.1,localhost' } });
 const context = await browser.newContext({ viewport: { width: 1366, height: 900 }, recordVideo: { dir: output, size: { width: 1366, height: 900 } } });
-await context.addInitScript(() => localStorage.setItem('prevloss:onboarding:v2', 'complete'));
+await context.addInitScript(() => localStorage.setItem('prevloss:onboarding:v3', 'complete'));
 const page = await context.newPage(); const video = page.video();
 try {
   await page.goto('http://127.0.0.1:5173');

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 
-export const ONBOARDING_KEY = 'prevloss:onboarding:v2';
+export const ONBOARDING_KEY = 'prevloss:onboarding:v3';
 
 type TourStep = {
   title: string;
@@ -24,7 +24,7 @@ const steps: TourStep[] = [
   },
   {
     title: 'Escolha e controle o cenário',
-    text: 'Selecione o comportamento da bomba e use o botão principal para iniciar, pausar ou retomar. “Nova execução” reinicia o cenário sem apagar a linha de base.',
+    text: 'Selecione o comportamento da bomba e use o botão principal para iniciar, pausar ou retomar. “Nova execução” começa de novo sem apagar o histórico.',
     target: '[data-tour="controls"]',
     label: 'Operação',
   },
@@ -80,7 +80,7 @@ export function OnboardingTour({ open, onClose }: { open: boolean; onClose: () =
 
   useEffect(() => {
     if (!open) return;
-    const target = document.querySelector<HTMLElement>(step.target);
+    const target = [...document.querySelectorAll<HTMLElement>(step.target)].find(element => element.offsetParent !== null);
     target?.classList.add('tour-target-active');
     if (stepIndex === 0) window.scrollTo({ top: 0, behavior: 'auto' });
     else target?.scrollIntoView?.({

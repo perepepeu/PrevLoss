@@ -15,7 +15,7 @@ describe('Contrato real e transporte HTTP', () => {
     const request = vi.fn().mockResolvedValue(new Response(JSON.stringify(fixture('normal'))));
     vi.stubGlobal('fetch', request);
     await new ApiClient().request('iniciar', new AbortController().signal, {});
-    expect(request).toHaveBeenCalledWith('http://127.0.0.1:8000/api/iniciar', expect.objectContaining({ method: 'POST', body: '{}', headers: { 'Content-Type': 'application/json' } }));
+    expect(request).toHaveBeenCalledWith(`${location.protocol}//${location.hostname}:8000/api/iniciar`, expect.objectContaining({ method: 'POST', body: '{}', headers: { 'Content-Type': 'application/json' } }));
   });
   it.each([400, 404, 405, 409, 422, 500])('mostra erro HTTP %s', async status => {
     vi.stubGlobal('fetch', vi.fn().mockResolvedValue(new Response(JSON.stringify({ erro: { mensagem: 'Confira os parâmetros.' } }), { status })));

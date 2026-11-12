@@ -51,7 +51,7 @@ try {
   // Do not disable the user's network adapter or unrelated applications.
   browser = await chromium.launch({ channel: 'chrome', headless: true, proxy: { server: 'http://127.0.0.1:9', bypass: '127.0.0.1,localhost' } });
   context = await browser.newContext({ viewport: { width: 1366, height: 768 }, recordVideo: { dir: output, size: { width: 1366, height: 768 } } });
-  await context.addInitScript(() => localStorage.setItem('prevloss:onboarding:v2', 'complete'));
+  await context.addInitScript(() => localStorage.setItem('prevloss:onboarding:v3', 'complete'));
   const probe = await context.newPage(); let externalBlocked = false;
   try { await probe.goto('https://example.com', { timeout: 5000 }); } catch { externalBlocked = true; }
   await probe.close(); assert.ok(externalBlocked, 'A conexão externa do navegador deveria estar bloqueada.');
@@ -134,13 +134,14 @@ try {
   await page.setViewportSize({ width: 1366, height: 768 });
   const beforeRestart = await get('estado');
   await page.getByRole('button', { name: 'Nova execução', exact: true }).click();
+  await page.getByRole('button', { name: 'Criar nova execução', exact: true }).click();
   await waitFor(async () => (await get('estado')).execucao_atual_id !== beforeRestart.execucao_atual_id, 'nova execução');
   assert.equal((await get('estado')).ultima_leitura, null);
   assert.equal((await get(`historico?execucao_id=${beforeRestart.execucao_atual_id}`)).itens.length >= 120, true);
   await page.getByLabel('Cenário', { exact: true }).selectOption('normal');
   await page.getByRole('button', { name: 'Informações', exact: true }).click();
   await page.getByRole('button', { name: 'Refazer linha de base', exact: true }).click();
-  await page.getByRole('button', { name: 'Iniciar nova referência', exact: true }).click();
+  await page.getByRole('button', { name: 'Iniciar nova linha de base', exact: true }).click();
   await waitFor(async () => (await get('estado')).calibracao.estado === 'em_andamento', 'nova coleta');
   await waitFor(async () => (await get('estado')).calibracao.estado === 'concluida', 'recalibração completa', 80000);
   assert.notEqual((await get('estado')).calibracao.referencia_id, report.referencia_id);

@@ -10,6 +10,11 @@ export function HistoryTable({ readings }: { readings: Leitura[] }) {
   return <section className="panel"><div className="section-heading"><div><h2>Registros da execução</h2><p>{readings.length} leituras recuperadas · horários de Brasília (Bahia)</p></div></div>
     {!readings.length ? <p className="empty-state">Esta execução ainda não possui leituras.</p> : <>
       <div className="table-scroll"><table><caption className="sr-only">Medições por sequência da execução selecionada</caption><thead><tr><th>Leitura</th><th>Data e hora</th><th>Tempo</th><th>°C</th><th>m/s² RMS</th><th>A</th><th>bar</th><th>ISE</th><th>Classificação</th><th>Qualidade</th></tr></thead><tbody>{slice.map(l => <tr key={l.sequencia}><td>{l.sequencia}</td><td>{date(l.data_hora)}</td><td>{l.tempo_simulado_s} s</td><td>{fmt(l.temperatura_c)}</td><td>{fmt(l.vibracao_rms_ms2)}</td><td>{fmt(l.corrente_a)}</td><td>{fmt(l.pressao_bar)}</td><td>{fmt(l.ise, 6)}</td><td><span className={`badge ${conditionClass(l.classificacao)}`}>{l.classificacao ?? 'Indisponível'}</span></td><td>{l.qualidade_dados === 'valida' ? 'Válida' : l.qualidade_dados === 'ausente' ? 'Ausente' : 'Inválida'}</td></tr>)}</tbody></table></div>
+      <ol className="history-cards" aria-label="Leituras da execução">{slice.map(l => <li key={l.sequencia}>
+        <div className="history-card-heading"><div><strong>Leitura {l.sequencia}</strong><small>{l.tempo_simulado_s} s · {date(l.data_hora)}</small></div><span className={`badge ${conditionClass(l.classificacao)}`}>{l.classificacao ?? 'Indisponível'}</span></div>
+        <div className="history-card-ise"><span>ISE</span><strong>{fmt(l.ise, 2)}</strong></div>
+        <dl><div><dt>Temperatura</dt><dd>{fmt(l.temperatura_c)} °C</dd></div><div><dt>Vibração</dt><dd>{fmt(l.vibracao_rms_ms2)} m/s²</dd></div><div><dt>Corrente</dt><dd>{fmt(l.corrente_a)} A</dd></div><div><dt>Pressão</dt><dd>{fmt(l.pressao_bar)} bar</dd></div></dl>
+      </li>)}</ol>
       <div className="pagination"><button disabled={current === 0} onClick={() => setPage(current - 1)}>Anterior</button><span>Página {current + 1} de {pages}</span><button disabled={current + 1 >= pages} onClick={() => setPage(current + 1)}>Próxima</button></div>
     </>}
   </section>;

@@ -19,6 +19,10 @@ from .session_service import Conflito, ExecucaoInexistente, Sessao
 
 LOG = logging.getLogger(__name__)
 ORIGENS_LOCAIS = "http://localhost:5173,http://127.0.0.1:5173"
+ORIGENS_REDE_LOCAL = (
+    r"^http://(?:10(?:\.\d{1,3}){3}|192\.168(?:\.\d{1,3}){2}|"
+    r"172\.(?:1[6-9]|2\d|3[01])(?:\.\d{1,3}){2}):5173$"
+)
 ERROS_ENTRADA = {422: {"model": EnvelopeErro, "description": "Entrada inválida"}}
 ERROS_POST = {**ERROS_ENTRADA, 400: {"model": EnvelopeErro, "description": "Corpo ilegível"}}
 ERROS_CONFLITO = {**ERROS_POST, 409: {"model": EnvelopeErro, "description": "Conflito de estado"}}
@@ -74,6 +78,7 @@ def criar_app(sessao: Sessao | None = None, *, gerar: bool = True, intervalo_s: 
     app.add_middleware(
         CORSMiddleware,
         allow_origins=[origem.strip() for origem in origens if origem.strip()],
+        allow_origin_regex=os.getenv("PREVLOSS_CORS_ORIGIN_REGEX", ORIGENS_REDE_LOCAL),
         allow_methods=["GET", "POST"],
         allow_headers=["Content-Type"],
     )
