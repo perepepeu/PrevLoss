@@ -20,7 +20,7 @@ describe('Apresentação fiel aos dados', () => {
     const state = fixture('normal-com-alerta-individual');
     render(<><HealthPanel reading={state.ultima_leitura}/><ActiveAlerts alerts={state.alertas_ativos} reading={state.ultima_leitura} available/></>);
     expect(screen.getByText('Normal')).toBeVisible();
-    expect(screen.getByText(state.alertas_ativos[0].mensagem)).toBeVisible();
+    expect(screen.getByText(state.alertas_ativos[0].mensagem.replace(/^Ambiente simulado:\s*/, ''))).toBeVisible();
   });
   it('explica empate nas contribuições', () => {
     const state = fixture('normal'); state.ultima_leitura!.contribuicoes_perda!.principais = ['temperatura', 'vibracao'];
@@ -29,7 +29,7 @@ describe('Apresentação fiel aos dados', () => {
   });
   it('informa novo teste pausado sem inventar leitura', () => {
     render(<CalibrationStatus state={fixture('execucao-nova-pausada')}/>);
-    expect(screen.getByText('Referência concluída. Inicie a simulação.')).toBeVisible();
+    expect(screen.getByText('Linha de base concluída. Inicie o monitoramento.')).toBeVisible();
   });
   it('exibe progresso de referência', () => {
     render(<CalibrationStatus state={fixture('calibracao-24-de-60')}/>);

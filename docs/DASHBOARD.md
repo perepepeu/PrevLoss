@@ -48,14 +48,16 @@ Não usar `--reload` ou múltiplos workers no backend durante a apresentação. 
 
 ## Operar
 
-1. Confirme **API conectada**. Abrir ou recarregar a página apenas consulta o servidor.
-2. Clique **Iniciar referência**. Aguarde 60 leituras válidas, aproximadamente um minuto. É uma referência estatística simulada, não calibração física.
-3. A coleta concluída prepara uma execução Normal pausada. Clique **Iniciar simulação** explicitamente.
-4. **Pausar** e **Retomar simulação** conservam os dados e a execução.
-5. Trocar o **Cenário ativo** encerra a execução anterior e prepara outra, pausada. Inicie quando estiver pronto.
+No primeiro acesso, um tutorial de seis passos apresenta a linha de base, os controles, as medições, o ISE, os alertas, os gráficos e o histórico. A conclusão ou o descarte fica registrado somente no navegador. Use **Como usar** no cabeçalho para reabrir o tutorial a qualquer momento.
+
+1. Confirme **Sistema online**. Abrir ou recarregar a página apenas consulta o servidor.
+2. Clique **Iniciar linha de base**. Aguarde 60 leituras válidas, aproximadamente um minuto.
+3. A coleta concluída prepara uma execução Normal pausada. Clique **Iniciar monitoramento** explicitamente.
+4. **Pausar** e **Retomar monitoramento** conservam os dados e a execução.
+5. Trocar o **Cenário** encerra a execução anterior e prepara outra, pausada. Inicie quando estiver pronto.
 6. **Nova execução** prepara novamente o cenário atual com seed 42 e preserva referência e histórico anterior.
-7. Em **Histórico da sessão**, selecione uma execução. Os controles acima continuam operando a execução ativa; o seletor do histórico apenas consulta.
-8. Para uma nova referência, selecione Normal, pause, abra **Detalhes da simulação**, clique **Refazer referência** e confirme. O histórico mantém suas referências anteriores.
+7. Em **Histórico**, selecione uma execução. Os controles acima continuam operando a execução ativa; o seletor do histórico apenas consulta.
+8. Para uma nova linha de base, selecione Normal, pause, abra **Informações**, clique **Refazer linha de base** e confirme. O histórico mantém suas referências anteriores.
 
 Valores ausentes aparecem como “—”; zero é um valor válido. A classificação, as contribuições e os alertas vêm do backend. Pressão instável pode apresentar **ISE Normal com alerta ativo**. O valor de um alerta individual é a razão de desvio `r`; o alerta de oscilação de pressão apresenta dispersão em bar. Ambos descrevem o instante de abertura.
 

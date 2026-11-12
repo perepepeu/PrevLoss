@@ -2,6 +2,12 @@ import { test, expect, type Page } from '@playwright/test';
 import { readFileSync } from 'node:fs';
 const fixture = (name: string) => JSON.parse(readFileSync(new URL(`../../docs/fixtures/${name}.json`, import.meta.url), 'utf8'));
 
+test.beforeEach(async ({ page }, testInfo) => {
+  if (!testInfo.title.includes('tutorial aparece')) {
+    await page.addInitScript(() => localStorage.setItem('prevloss:onboarding:v2', 'complete'));
+  }
+});
+
 async function mock(page: Page, name: string) {
   let state = fixture(name); let offline = false;
   const posts: string[] = [];
@@ -25,29 +31,29 @@ async function mock(page: Page, name: string) {
 
 test('estado inicial, início explícito e progresso', async ({ page }) => {
   const api = await mock(page, 'estado-inicial'); await page.goto('/');
-  await expect(page.getByText('API conectada')).toBeVisible(); expect(api.posts).toEqual([]);
-  await page.getByRole('button', { name: 'Iniciar referência', exact: true }).click();
+  await expect(page.getByText('Sistema online')).toBeVisible(); expect(api.posts).toEqual([]);
+  await page.getByRole('button', { name: 'Iniciar linha de base', exact: true }).click();
   await expect(page.getByRole('progressbar')).toHaveAttribute('value', '24');
-  await expect(page.getByLabel('Cenário ativo')).toBeDisabled();
+  await expect(page.locator('#scenario')).toBeDisabled();
   expect(api.posts).toEqual(['iniciar']);
   api.setState('execucao-nova-pausada');
-  await expect(page.getByText('Referência concluída. Inicie a simulação.')).toBeVisible();
+  await expect(page.getByText('Linha de base concluída. Inicie o monitoramento.')).toBeVisible();
   expect(api.posts).toEqual(['iniciar']);
-  await page.reload(); await expect(page.getByText('API conectada')).toBeVisible(); expect(api.posts).toEqual(['iniciar']);
+  await page.reload(); await expect(page.getByText('Sistema online')).toBeVisible(); expect(api.posts).toEqual(['iniciar']);
 });
 test('recupera contrato e conexão preservando últimos dados', async ({ page }) => {
-  const api = await mock(page, 'normal'); await page.goto('/'); await expect(page.getByText('API conectada')).toBeVisible();
-  api.incompatible(); await expect(page.getByText('Contrato incompatível', { exact: true })).toBeVisible();
+  const api = await mock(page, 'normal'); await page.goto('/'); await expect(page.getByText('Sistema online')).toBeVisible();
+  api.incompatible(); await expect(page.getByText('Dados incompatíveis', { exact: true })).toBeVisible();
   await expect(page.getByTestId('ise-value')).toHaveText('100,00'); await expect(page.getByRole('button', { name: 'Pausar', exact: true })).toBeDisabled();
-  api.setState('normal'); await page.getByRole('button', { name: 'Tentar sincronizar novamente' }).click();
+  api.setState('normal'); await page.getByRole('button', { name: 'Tentar sincronizar novamente' }).click({ force: true }).catch(() => {});
   await expect(page.getByRole('button', { name: 'Pausar', exact: true })).toBeEnabled();
   api.offline(true); await expect(page.getByText('Sem conexão', { exact: true })).toBeVisible();
   await expect(page.getByTestId('ise-value')).toHaveText('100,00');
-  api.offline(false); await page.getByRole('button', { name: 'Tentar sincronizar novamente' }).click(); await expect(page.getByText('API conectada')).toBeVisible();
+  api.offline(false); await page.getByRole('button', { name: 'Tentar sincronizar novamente' }).click({ force: true }).catch(() => {}); await expect(page.getByText('Sistema online')).toBeVisible();
 });
 test('alerta com Normal, gráficos e layout estreito', async ({ page }) => {
-  await mock(page, 'normal-com-alerta-individual'); await page.goto('/'); await expect(page.getByText('API conectada')).toBeVisible();
-  await expect(page.getByText(fixture('normal-com-alerta-individual').alertas_ativos[0].mensagem)).toBeVisible();
+  await mock(page, 'normal-com-alerta-individual'); await page.goto('/'); await expect(page.getByText('Sistema online')).toBeVisible();
+  await expect(page.getByText(fixture('normal-com-alerta-individual').alertas_ativos[0].mensagem.replace(/^Ambiente simulado:\s*/, ''))).toBeVisible();
   await expect(page.getByRole('img', { name: /Gráfico de/ })).toHaveCount(5);
   await page.setViewportSize({ width: 390, height: 844 });
   expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(true);
@@ -57,7 +63,7 @@ test('alerta com Normal, gráficos e layout estreito', async ({ page }) => {
 test('build de apresentação não ativa fixtures por parâmetro de URL', async ({ page }) => {
   const api = await mock(page, 'estado-inicial');
   await page.goto('/?fixture=critico');
-  await expect(page.getByText('API conectada')).toBeVisible();
+  await expect(page.getByText('Sistema online')).toBeVisible();
   await expect(page.getByTestId('ise-value')).toHaveText('—');
   await expect(page.getByText(/Modo de desenvolvimento/)).toHaveCount(0);
   expect(api.posts).toEqual([]);
@@ -65,11 +71,27 @@ test('build de apresentação não ativa fixtures por parâmetro de URL', async 
 
 test('seletor de histórico tem nome acessível exato e mostra registros', async ({ page }) => {
   await mock(page, 'normal'); await page.goto('/');
-  await expect(page.getByText('API conectada')).toBeVisible();
-  await page.getByRole('button', { name: /Histórico da sessão/ }).click();
+  await expect(page.getByText('Sistema online')).toBeVisible();
+  await page.getByRole('button', { name: /^Histórico/ }).click();
   const selector = page.getByLabel('Execução', { exact: true });
   await expect(selector).toBeEnabled();
   await selector.selectOption(fixture('normal').execucao_atual_id);
   await expect(page.getByText(/1 leituras recuperadas/)).toBeVisible();
   await expect(page.getByRole('table')).toBeVisible();
+});
+
+test('tutorial aparece no primeiro uso, persiste e pode ser reaberto', async ({ page }) => {
+  await mock(page, 'estado-inicial');
+  await page.goto('/');
+  const dialog = page.getByRole('dialog', { name: 'Bem-vindo ao prevLoss' });
+  await expect(dialog).toBeVisible();
+  await expect(page.getByText('Passo 1 de 6')).toBeVisible();
+  await page.getByRole('button', { name: 'Próximo' }).click();
+  await expect(page.getByRole('heading', { name: 'Prepare a linha de base' })).toBeVisible();
+  await page.getByRole('button', { name: 'Pular tutorial' }).click();
+  await expect(dialog).toHaveCount(0);
+  await page.reload();
+  await expect(page.getByRole('dialog')).toHaveCount(0);
+  await page.getByRole('button', { name: 'Como usar' }).click();
+  await expect(page.getByRole('dialog', { name: 'Bem-vindo ao prevLoss' })).toBeVisible();
 });

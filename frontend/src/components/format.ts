@@ -7,6 +7,10 @@ export const variables = [
 ] as const;
 export const names = Object.fromEntries(variables.map(v => [v.id, v.name]));
 export const fmt = (value: number | null | undefined, precision = 2) => value == null ? '—' : value.toLocaleString('pt-BR', { minimumFractionDigits: precision, maximumFractionDigits: precision });
+export const cleanCopy = (text: string) => text
+  .replace(/^Ambiente simulado:\s*/i, '')
+  .replace(/^Simulação iniciada ou retomada\.$/i, 'Monitoramento iniciado ou retomado.')
+  .replace(/^Simulação pausada\.$/i, 'Monitoramento pausado.');
 export function iseText(reading: Leitura | null) {
   if (reading?.ise == null) return '—';
   const n = reading.ise;

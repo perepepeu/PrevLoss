@@ -17,10 +17,11 @@ while (true) {
 }
 const browser = await chromium.launch({ channel: 'chrome', proxy: { server: 'http://127.0.0.1:9', bypass: '127.0.0.1,localhost' } });
 const context = await browser.newContext({ viewport: { width: 1366, height: 900 }, recordVideo: { dir: output, size: { width: 1366, height: 900 } } });
+await context.addInitScript(() => localStorage.setItem('prevloss:onboarding:v2', 'complete'));
 const page = await context.newPage(); const video = page.video();
 try {
   await page.goto('http://127.0.0.1:5173');
-  await expect(page.getByText('API conectada')).toBeVisible();
+  await expect(page.getByText('Sistema online')).toBeVisible();
   await page.evaluate(() => {
     const label = document.createElement('div'); label.textContent = 'Gravação reserva | Ambiente simulado | Múltiplos desvios · seed 42';
     Object.assign(label.style, { position: 'fixed', bottom: '0', left: '0', right: '0', zIndex: '1000', background: '#183044', color: 'white', padding: '10px 30px', font: '14px Segoe UI', textAlign: 'center' });
@@ -33,7 +34,7 @@ try {
   await page.getByRole('heading', { name: 'Evolução das leituras' }).scrollIntoViewIfNeeded();
   await page.evaluate(() => window.scrollBy(0, 240));
   await sleep(15000);
-  await page.getByRole('button', { name: /Histórico da sessão/ }).click();
+  await page.getByRole('button', { name: /^Histórico/ }).click();
   await page.getByLabel('Execução', { exact: true }).selectOption({ index: 5 });
   await page.getByRole('heading', { name: 'Registros da execução' }).scrollIntoViewIfNeeded();
   await sleep(6000);

@@ -51,6 +51,7 @@ try {
   // Do not disable the user's network adapter or unrelated applications.
   browser = await chromium.launch({ channel: 'chrome', headless: true, proxy: { server: 'http://127.0.0.1:9', bypass: '127.0.0.1,localhost' } });
   context = await browser.newContext({ viewport: { width: 1366, height: 768 }, recordVideo: { dir: output, size: { width: 1366, height: 768 } } });
+  await context.addInitScript(() => localStorage.setItem('prevloss:onboarding:v2', 'complete'));
   const probe = await context.newPage(); let externalBlocked = false;
   try { await probe.goto('https://example.com', { timeout: 5000 }); } catch { externalBlocked = true; }
   await probe.close(); assert.ok(externalBlocked, 'A conexão externa do navegador deveria estar bloqueada.');
@@ -59,10 +60,10 @@ try {
   page.on('pageerror', error => browserErrors.push(error.message));
   page.on('request', request => { if (!['127.0.0.1', 'localhost'].includes(new URL(request.url()).hostname)) remoteRequests.push(request.url()); });
   await page.goto('http://127.0.0.1:5173');
-  await expect(page.getByText('API conectada')).toBeVisible();
+  await expect(page.getByText('Sistema online')).toBeVisible();
   assert.equal((await get('estado')).estado_simulacao, 'parada');
   await page.screenshot({ path: join(output, '01-inicial.png'), fullPage: true });
-  await page.getByRole('button', { name: 'Iniciar referência', exact: true }).click();
+  await page.getByRole('button', { name: 'Iniciar linha de base', exact: true }).click();
   await waitFor(async () => (await get('estado')).calibracao.coletadas >= 24, '24 leituras de referência', 40000);
   await page.screenshot({ path: join(output, '02-calibracao.png'), fullPage: true });
   console.log('Calibração inicial: 24/60 leituras.');
@@ -77,11 +78,11 @@ try {
   for (const expected of golden.resultados) {
     const scenario = expected.cenario;
     if (scenario !== 'normal') {
-      await page.getByLabel('Cenário ativo').selectOption(scenario);
+      await page.getByLabel('Cenário', { exact: true }).selectOption(scenario);
       await waitFor(async () => { const s = await get('estado'); return s.cenario_selecionado === scenario && s.estado_simulacao === 'pausada'; }, `selecionar ${scenario}`);
     }
-    await expect(page.getByRole('button', { name: 'Iniciar simulação', exact: true })).toBeEnabled();
-    await page.getByRole('button', { name: 'Iniciar simulação', exact: true }).click();
+    await expect(page.getByRole('button', { name: 'Iniciar monitoramento', exact: true })).toBeEnabled();
+    await page.getByRole('button', { name: 'Iniciar monitoramento', exact: true }).click();
     const started = await get('estado');
     assert.equal(started.calibracao.referencia_id, report.referencia_id);
     if (scenario === 'normal') {
@@ -89,7 +90,7 @@ try {
       await page.getByRole('button', { name: 'Pausar', exact: true }).click();
       const paused = await get('estado'); await sleep(2100);
       assert.equal((await get('estado')).ultima_leitura.sequencia, paused.ultima_leitura.sequencia);
-      await page.getByRole('button', { name: 'Retomar simulação', exact: true }).click();
+      await page.getByRole('button', { name: 'Retomar monitoramento', exact: true }).click();
       report.verificacoes.push('Pausa mantém sequência estável; retomada preserva execução.');
     }
     let lastProgress = -1;
@@ -99,7 +100,7 @@ try {
       return n >= 120;
     }, `120 leituras ${scenario}`, 145000);
     await page.getByRole('button', { name: 'Pausar', exact: true }).click();
-    await expect(page.getByRole('button', { name: 'Retomar simulação', exact: true })).toBeEnabled();
+    await expect(page.getByRole('button', { name: 'Retomar monitoramento', exact: true })).toBeEnabled();
     const state = await get('estado');
     const records = (await get(`historico?execucao_id=${state.execucao_atual_id}&limite=1000`)).itens.slice(0, 120);
     assert.equal(records.length, 120); assert.ok(records.every((l, i) => l.sequencia === i + 1 && l.execucao_id === state.execucao_atual_id && l.referencia_id === report.referencia_id));
@@ -110,16 +111,16 @@ try {
     for (const alert of expected.aberturas) assert.ok(events.some(e => e.tipo === 'alerta_aberto' && e.alerta.codigo === alert.codigo && e.alerta.variavel === alert.variavel && e.sequencia === alert.tempo_simulado_s));
     await expect(page.getByTestId('ise-value')).toHaveText(expected.ise_final.toLocaleString('pt-BR', { minimumFractionDigits: 2 }));
     await expect(page.getByRole('img', { name: /Gráfico de/ })).toHaveCount(5);
-    for (const alert of state.alertas_ativos) await expect(page.getByText(alert.mensagem, { exact: true }).first()).toBeVisible();
+    for (const alert of state.alertas_ativos) await expect(page.getByText(alert.mensagem.replace(/^Ambiente simulado:\s*/i, ''), { exact: true }).first()).toBeVisible();
     await page.screenshot({ path: join(output, `cenario-${scenario}.png`), fullPage: true });
     report.cenarios.push({ cenario: scenario, execucao_id: state.execucao_atual_id, seed: 42, referencia_id: report.referencia_id, leituras: records, eventos: events, estado: state, esperado: expected, resultado: 'aprovado' });
     await checkpoint(); console.log(`${scenario}: aprovado, ISE final ${expected.ise_final}.`);
     if (scenario === 'normal') {
-      await page.reload(); await expect(page.getByText('API conectada')).toBeVisible(); assert.equal((await get('estado')).execucao_atual_id, state.execucao_atual_id);
+      await page.reload(); await expect(page.getByText('Sistema online')).toBeVisible(); assert.equal((await get('estado')).execucao_atual_id, state.execucao_atual_id);
       report.verificacoes.push('Reload do dashboard mantém sessão, execução e histórico.');
     }
   }
-  await page.getByRole('button', { name: /Histórico da sessão/ }).click();
+  await page.getByRole('button', { name: /^Histórico/ }).click();
   await page.getByLabel('Execução', { exact: true }).selectOption(report.cenarios[0].execucao_id);
   await expect(page.getByText(/120 leituras recuperadas/)).toBeVisible();
   await page.getByRole('button', { name: 'Próxima', exact: true }).click();
@@ -136,9 +137,9 @@ try {
   await waitFor(async () => (await get('estado')).execucao_atual_id !== beforeRestart.execucao_atual_id, 'nova execução');
   assert.equal((await get('estado')).ultima_leitura, null);
   assert.equal((await get(`historico?execucao_id=${beforeRestart.execucao_atual_id}`)).itens.length >= 120, true);
-  await page.getByLabel('Cenário ativo').selectOption('normal');
-  await page.getByRole('button', { name: 'Detalhes da simulação', exact: true }).click();
-  await page.getByRole('button', { name: 'Refazer referência', exact: true }).click();
+  await page.getByLabel('Cenário', { exact: true }).selectOption('normal');
+  await page.getByRole('button', { name: 'Informações', exact: true }).click();
+  await page.getByRole('button', { name: 'Refazer linha de base', exact: true }).click();
   await page.getByRole('button', { name: 'Iniciar nova referência', exact: true }).click();
   await waitFor(async () => (await get('estado')).calibracao.estado === 'em_andamento', 'nova coleta');
   await waitFor(async () => (await get('estado')).calibracao.estado === 'concluida', 'recalibração completa', 80000);
@@ -149,7 +150,7 @@ try {
   await expect(page.getByText('Sem conexão', { exact: true })).toBeVisible({ timeout: 15000 });
   await page.screenshot({ path: join(output, 'desconexao.png'), fullPage: true });
   backend = startBackend();
-  await expect(page.getByText('API conectada')).toBeVisible({ timeout: 20000 });
+  await expect(page.getByText('Sistema online')).toBeVisible({ timeout: 20000 });
   await expect(page.getByText(/O servidor reiniciou/)).toBeVisible();
   assert.notEqual((await get('estado')).sessao_id, report.sessao_id);
   assert.deepEqual((await get('execucoes')).execucoes, []);

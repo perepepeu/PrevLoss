@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import type { Evento, Leitura } from '../types/api';
-import { conditionClass, date, fmt, scenarioName } from './format';
+import { cleanCopy, conditionClass, date, fmt, scenarioName } from './format';
 
 export function HistoryTable({ readings }: { readings: Leitura[] }) {
   const [page, setPage] = useState(0);
@@ -16,8 +16,8 @@ export function HistoryTable({ readings }: { readings: Leitura[] }) {
 }
 
 export function EventTimeline({ events }: { events: Evento[] }) {
-  return <section className="panel"><div className="section-heading"><div><h2>Eventos da execução</h2><p>Aberturas, encerramentos e mudanças de operação</p></div><span className="quiet">{events.length} eventos</span></div>
-    {events.length ? <ol className="timeline">{[...events].reverse().map(event => <li key={event.id} className={event.tipo === 'falha_geracao' ? 'failure' : ''}><time>{date(event.data_hora)}</time><div><strong>{event.mensagem}</strong>{event.alerta?.motivo_encerramento && <p>{event.alerta.motivo_encerramento === 'recuperacao' ? 'Alerta encerrado por recuperação.' : 'Execução encerrada. Isso não comprova recuperação da condição.'}</p>}{event.sequencia !== null && <small>Leitura {event.sequencia}</small>}</div></li>)}</ol> : <p className="quiet">Nenhum evento registrado nesta execução.</p>}
+  return <section className="panel"><div className="section-heading"><div><h2>Atividade recente</h2><p>Alertas e mudanças de operação</p></div><span className="quiet">{events.length} eventos</span></div>
+    {events.length ? <ol className="timeline">{[...events].reverse().map(event => <li key={event.id} className={event.tipo === 'falha_geracao' ? 'failure' : ''}><time>{date(event.data_hora)}</time><div><strong>{cleanCopy(event.mensagem)}</strong>{event.alerta?.motivo_encerramento && <p>{event.alerta.motivo_encerramento === 'recuperacao' ? 'Alerta encerrado por recuperação.' : 'Execução encerrada. Isso não comprova recuperação da condição.'}</p>}{event.sequencia !== null && <small>Leitura {event.sequencia}</small>}</div></li>)}</ol> : <p className="quiet">Nenhum evento registrado nesta execução.</p>}
   </section>;
 }
 
