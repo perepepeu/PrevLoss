@@ -25,7 +25,7 @@ export function validate<K extends keyof Schema>(name: K, value: unknown): Schem
 
 export class ApiClient {
   readonly base: string;
-  constructor(base = import.meta.env.VITE_API_BASE_URL || `${location.protocol}//${location.hostname}:8000`, private timeout = 5000) {
+  constructor(base = import.meta.env.VITE_API_BASE_URL || `${location.protocol}//${location.hostname}:${['localhost', '127.0.0.1'].includes(location.hostname) ? '8000' : location.port || '5173'}`, private timeout = 5000) {
     this.base = base.replace(/\/+$/, '');
     const url = new URL(this.base);
     if (!['http:', 'https:'].includes(url.protocol) || url.pathname !== '/' || url.search || url.hash) {

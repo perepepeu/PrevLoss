@@ -85,7 +85,9 @@ export function OnboardingTour({ open, onClose }: { open: boolean; onClose: () =
     if (stepIndex === 0) window.scrollTo({ top: 0, behavior: 'auto' });
     else target?.scrollIntoView?.({
       behavior: typeof matchMedia === 'function' && matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth',
-      block: 'center',
+      // On phones the tour sheet occupies the bottom of the screen. Keep the
+      // highlighted control above it instead of centering it behind the sheet.
+      block: typeof matchMedia === 'function' && matchMedia('(max-width: 680px)').matches ? 'start' : 'center',
     });
     panel.current?.focus({ preventScroll: true });
     return () => target?.classList.remove('tour-target-active');
