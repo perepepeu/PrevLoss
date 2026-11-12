@@ -8,6 +8,8 @@ Siga [o guia de instalação, operação e apresentação](docs/DASHBOARD.md). A
 
 Depois de preparar as dependências, mantenha o backend aberto pelo comando abaixo e, em outro terminal na pasta `frontend`, execute `npm run build` e `npm run preview`. Para desenvolver, use `npm run dev` no lugar do preview.
 
+Para testar no celular na mesma rede, execute `npm run mobile` na pasta `frontend`. O comando inicia os serviços, mostra o link e salva o QR Code em `frontend/dist/acesso-mobile.svg`. Veja [o guia mobile](docs/MOBILE_UX.md).
+
 - [Matriz das 12 verificações originais de Caíque](docs/MATRIZ_CAIQUE.md)
 - [Revisão original disponibilizada localmente](docs/referencias/ALTERACAO.pdf)
 - [Entrega, verificações e evidências do frontend](docs/ENTREGA_PEDRO.md)

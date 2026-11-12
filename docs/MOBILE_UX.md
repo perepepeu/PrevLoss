@@ -33,28 +33,17 @@ O mobile passou de aproximadamente **58% para 90% pronto**. O restante correspon
 
 Use uma rede Wi-Fi privada e confiável. Não encaminhe as portas do roteador para a internet.
 
-No terminal da raiz:
+Depois de instalar as dependências com `uv sync --locked` na raiz e `npm ci` em `frontend`, execute na pasta `frontend`:
 
 ```powershell
-uv run --locked uvicorn backend.app.main:app --host 0.0.0.0 --port 8000 --workers 1
+npm run mobile
 ```
 
-Na pasta `frontend`:
+O comando recompila o dashboard, inicia os serviços que ainda não estiverem rodando e mostra o endereço IPv4 do Wi-Fi, por exemplo `http://192.168.1.25:5173/`. Ele também salva um QR Code em `frontend/dist/acesso-mobile.svg` para abrir e escanear na tela do computador.
 
-```powershell
-npm run build
-npm run preview:mobile
-```
+O celular acessa o frontend na porta 5173. As chamadas `/api` passam por essa mesma porta e são encaminhadas ao backend, que escuta somente em `127.0.0.1:8000` no computador. Se existir `VITE_API_BASE_URL` em `frontend/.env`, remova essa configuração antes de gerar o build para usar o encaminhamento automático.
 
-Execute `ipconfig` e localize o endereço IPv4 do notebook, por exemplo `192.168.1.25`. Com o celular no mesmo Wi-Fi, abra:
-
-```text
-http://192.168.1.25:5173
-```
-
-O frontend usa automaticamente o mesmo endereço para alcançar a API na porta 8000. Se existir um arquivo `frontend/.env`, remova temporariamente `VITE_API_BASE_URL` ou configure-o com o mesmo IPv4 antes de gerar o build.
-
-O Windows pode solicitar permissão de firewall. Autorize somente para redes privadas. Encerre os dois terminais com `Ctrl+C` depois do uso.
+O Windows pode solicitar permissão de firewall para a porta 5173. Autorize somente em redes privadas. Os serviços iniciados pelo comando continuam rodando em segundo plano após ele terminar; encerre os processos da API e do Vite ao fim da demonstração.
 
 ## Matriz automatizada
 

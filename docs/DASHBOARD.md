@@ -44,7 +44,7 @@ Abra **http://127.0.0.1:5173**. O build realiza a checagem TypeScript com `tsc -
 
 Tanto `dev` quanto `preview` usam `--host 127.0.0.1 --port 5173 --strictPort`. Se a porta estiver ocupada, o processo falhará claramente; não escolherá outra porta. Não execute os dois servidores de frontend ao mesmo tempo.
 
-Para usar em um celular conectado ao mesmo Wi-Fi, siga [MOBILE_UX.md](MOBILE_UX.md). Os scripts `dev:mobile` e `preview:mobile` expõem somente o frontend à rede local; o backend também precisa iniciar com `--host 0.0.0.0`. Use esse modo apenas em uma rede privada confiável.
+Para usar em um celular conectado ao mesmo Wi-Fi, siga [MOBILE_UX.md](MOBILE_UX.md) e execute `npm run mobile`. Ele expõe o frontend à rede local e encaminha `/api` para o backend local; a porta 8000 permanece no próprio computador. Use esse modo apenas em uma rede privada confiável.
 
 Não usar `--reload` ou múltiplos workers no backend durante a apresentação. Parar esse processo apaga sua sessão em memória. Para encerrar normalmente, use Ctrl+C nos terminais correspondentes.
 
