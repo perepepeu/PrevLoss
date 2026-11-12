@@ -48,6 +48,8 @@ Para montar o adaptador, use os exemplos completos e os tipos gerados. Na valida
 
 ## Pendências e limites
 
+Atualização da integração de Pedro: o documento original de Caíque foi disponibilizado em [referencias/ALTERACAO.pdf](referencias/ALTERACAO.pdf) e conferido em [MATRIZ_CAIQUE.md](MATRIZ_CAIQUE.md). O status atual dos testes de interface está em [ENTREGA_PEDRO.md](ENTREGA_PEDRO.md). Os itens abaixo preservam o registro da entrega original de Emerson.
+
 - **Pedro e Emerson:** executar o roteiro com o dashboard real, conferir o contrato e aprovar os parâmetros didáticos antes de congelar a integração.
 - **Caíque:** conferir a matriz com as 12 verificações originais quando `ALTERACAO.pdf` estiver disponível. Os resultados técnicos desta entrega constam em [TESTES.md](TESTES.md).
 - **Operação:** o histórico fica em memória durante o processo. A validação executada cobre Windows 11. O protótipo representa uma bomba simulada, e os resultados medem o comportamento do software nos cenários programados. [Limitações](LIMITACOES.md)

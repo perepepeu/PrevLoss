@@ -1,0 +1,11 @@
+import type { components } from '../../../docs/contrato-v1';
+export type Schema = components['schemas'];
+export type Estado = Schema['Estado'];
+export type Leitura = Schema['Leitura'];
+export type Alerta = Schema['Alerta'];
+export type Evento = Schema['Evento'];
+export type Configuracao = Schema['Configuracao'];
+export type Execucoes = Schema['Execucoes'];
+export type Cenario = Estado['cenario_selecionado'];
+export type InfoCenario = Schema['InfoCenario'];
+export type Comando = 'iniciar' | 'pausar' | 'cenario' | 'reiniciar' | 'recalibrar';

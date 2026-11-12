@@ -2,3 +2,12 @@
 __pycache__/
 .pytest_cache/
 .env
+node_modules/
+dist/
+*.tsbuildinfo
+frontend/test-results/
+frontend/playwright-report/
+frontend/.vite/
+docs/evidencias/pedro/**/*.webm
+docs/evidencias/pedro/**/demonstracao-reserva-curta.png
+docs/evidencias/pedro/**/enquadramento-teste.png

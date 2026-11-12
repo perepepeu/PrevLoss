@@ -1,0 +1,133 @@
+{
+  "resultado": "aprovado",
+  "data_hora": "2026-11-10T17:46:50.753231+00:00",
+  "ambiente": "Windows-11-10.0.26300-SP0",
+  "python": "3.13.15",
+  "versao_software": "0.1.0",
+  "porta_loopback": 58882,
+  "sessao_id": "cee1915c-8779-4281-b5ae-8b10218c284c",
+  "referencia_id": "ee4e6ee2-d0c1-49ec-acfb-b042dd2df611",
+  "seed": 42,
+  "execucao_calibracao_id": "f7b54e04-fce3-44c4-a8b8-af1bb3244879",
+  "execucao_normal_id": "14875c4b-8911-4175-a1bb-8ed2f0f3c6f1",
+  "execucao_aquecimento_id": "d94e056d-e4c2-43f4-b9aa-654daf964238",
+  "calibracao_coletadas": 60,
+  "normal_primeiro_ise": 100.0,
+  "chamadas_verificadas": [
+    {
+      "metodo": "GET",
+      "rota": "/api/saude",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/docs",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/openapi.json",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/cenarios",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/configuracao",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/estado",
+      "status": 200
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/reiniciar",
+      "status": 409
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/estado",
+      "status": 200
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/iniciar",
+      "status": 200
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/iniciar",
+      "status": 200
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/pausar",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/estado",
+      "status": 200
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/cenario",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/historico?execucao_id=d94e056d-e4c2-43f4-b9aa-654daf964238",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/historico?execucao_id=f7b54e04-fce3-44c4-a8b8-af1bb3244879",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/historico?execucao_id=14875c4b-8911-4175-a1bb-8ed2f0f3c6f1&limite=1",
+      "status": 200
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/reiniciar",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/execucoes",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/eventos?execucao_id=14875c4b-8911-4175-a1bb-8ed2f0f3c6f1",
+      "status": 200
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/cenario",
+      "status": 200
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/recalibrar",
+      "status": 200
+    },
+    {
+      "metodo": "GET",
+      "rota": "/api/historico?execucao_id=14875c4b-8911-4175-a1bb-8ed2f0f3c6f1&limite=1",
+      "status": 200
+    },
+    {
+      "metodo": "POST",
+      "rota": "/api/cenario",
+      "status": 422
+    }
+  ]
+}
