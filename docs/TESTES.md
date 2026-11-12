@@ -50,7 +50,7 @@ Os valores abaixo são tempos simulados de primeira ocorrência. `—` significa
 
 ## Matriz técnica de aceitação
 
-Os itens abaixo são verificações do guia de Emerson. A correspondência com a lista original de Caíque permanece bloqueada até consultar `ALTERACAO.pdf`.
+Os itens abaixo são verificações do guia de Emerson, registradas na entrega original. Atualização da integração de Pedro: a revisão de Caíque está disponível em [ALTERACAO.pdf](referencias/ALTERACAO.pdf), e a correspondência das 12 verificações originais foi conferida em [MATRIZ_CAIQUE.md](MATRIZ_CAIQUE.md). Os resultados do dashboard são registrados separadamente em [ENTREGA_PEDRO.md](ENTREGA_PEDRO.md).
 
 | Nº | Verificação | Resultado observado | Status |
 | --- | --- | --- | --- |

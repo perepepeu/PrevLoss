@@ -1,6 +1,16 @@
 # prevLoss
 
-Backend do protótipo local de monitoramento simulado de uma bomba. A API gera quatro medidas em cinco cenários, calcula referência estatística e ISE e mantém alertas e histórico da sessão.
+Protótipo local de monitoramento simulado de uma bomba. A API gera quatro medidas em cinco cenários, calcula referência estatística e ISE e mantém alertas e histórico da sessão. O dashboard React em `frontend/` permite operar a simulação, acompanhar gráficos e consultar execuções anteriores.
+
+## Dashboard de Pedro
+
+Siga [o guia de instalação, operação e apresentação](docs/DASHBOARD.md). A interface usa `http://127.0.0.1:5173` tanto em desenvolvimento quanto na apresentação, e a API usa `http://127.0.0.1:8000`.
+
+Depois de preparar as dependências, mantenha o backend aberto pelo comando abaixo e, em outro terminal na pasta `frontend`, execute `npm run build` e `npm run preview`. Para desenvolver, use `npm run dev` no lugar do preview.
+
+- [Matriz das 12 verificações originais de Caíque](docs/MATRIZ_CAIQUE.md)
+- [Revisão original disponibilizada localmente](docs/referencias/ALTERACAO.pdf)
+- [Entrega, verificações e evidências do frontend](docs/ENTREGA_PEDRO.md)
 
 ## Iniciar
 

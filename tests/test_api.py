@@ -77,6 +77,18 @@ def test_cors_loopback(api):
     assert response.headers["access-control-allow-origin"] == "http://localhost:5173"
 
 
+def test_cors_rede_local_permite_celular_e_recusa_origem_publica(api):
+    client, _ = api
+    local = client.options("/api/iniciar", headers={
+        "Origin": "http://192.168.1.25:5173", "Access-Control-Request-Method": "POST"
+    })
+    assert local.headers["access-control-allow-origin"] == "http://192.168.1.25:5173"
+    public = client.options("/api/iniciar", headers={
+        "Origin": "http://example.com:5173", "Access-Control-Request-Method": "POST"
+    })
+    assert "access-control-allow-origin" not in public.headers
+
+
 def test_erro_500_visivel_ao_frontend_e_sem_mutacao():
     def fabrica_com_falha(seed, tipo):
         raise RuntimeError("Falha controlada de criação.")
