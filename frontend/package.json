@@ -11,6 +11,7 @@
   "scripts": {
     "dev": "vite --host 127.0.0.1 --port 5173 --strictPort",
     "dev:mobile": "vite --host 0.0.0.0 --port 5173 --strictPort",
+    "mobile": "node scripts/start-mobile.mjs",
     "build": "tsc -b && vite build",
     "preview": "vite preview --host 127.0.0.1 --port 5173 --strictPort",
     "preview:mobile": "vite preview --host 0.0.0.0 --port 5173 --strictPort",
@@ -41,6 +42,7 @@
     "eslint-plugin-react-hooks": "7.1.1",
     "globals": "17.14.0",
     "jsdom": "29.1.1",
+    "qrcode-svg": "^1.1.0",
     "typescript": "6.0.3",
     "typescript-eslint": "8.72.2",
     "vite": "8.3.7",
